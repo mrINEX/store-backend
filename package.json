@@ -7,7 +7,7 @@
     "sls:rm": "serverless remove",
     "sls:pkg": "serverless package",
     "sls:dpl": "serverless deploy",
-    "sls:run:local": "sls invoke local -f hello --path src/functions/hello/mock.json",
+    "sls:run:local": "sls invoke local -f getProducts --path src/functions/getProducts/mock.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
