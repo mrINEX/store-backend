@@ -1,18 +1,18 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
-import { products } from "./products.mock";
+import { mockProducts } from "./products.mock";
 
 import schema from "./schema";
 
-const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
+const getProducts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   event
 ) => {
   return formatJSONResponse({
-    data: products,
+    data: mockProducts,
     message: `Products`,
     event,
   });
 };
 
-export const main = middyfy(hello);
+export const main = middyfy(getProducts);
