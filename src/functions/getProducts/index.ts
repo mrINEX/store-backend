@@ -9,6 +9,7 @@ export default <AWS["functions"]>{
       http: {
         method: "get",
         path: "products",
+        cors: true,
         // request: {
         //   schemas: {
         //     "application/json": schema,
