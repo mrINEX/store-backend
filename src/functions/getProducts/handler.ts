@@ -5,13 +5,12 @@ import { mockProducts } from "../../common/products.mock";
 
 import schema from "./schema";
 
-const getProducts: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
-  event
-) => {
+const getProducts: ValidatedEventAPIGatewayProxyEvent<
+  typeof schema
+> = async () => {
   return formatJSONResponse({
     data: mockProducts,
-    message: `Products`,
-    event,
+    message: `products`,
   });
 };
 
