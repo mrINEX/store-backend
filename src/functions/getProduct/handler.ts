@@ -7,7 +7,8 @@ import { mockProducts } from "../../common/products.mock";
 const getProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   event
 ) => {
-  const product = mockProducts.find(
+  const products = await mockProducts;
+  const product = products.find(
     (product) => product.id === event.pathParameters.id
   );
 

@@ -8,8 +8,9 @@ import schema from "./schema";
 const getProducts: ValidatedEventAPIGatewayProxyEvent<
   typeof schema
 > = async () => {
+  const products = await mockProducts;
   return formatJSONResponse({
-    data: mockProducts,
+    data: products,
     message: `products`,
   });
 };
