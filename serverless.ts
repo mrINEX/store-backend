@@ -34,6 +34,8 @@ const serverlessConfiguration: AWS = {
       define: { "require.resolve": undefined },
       platform: "node",
       concurrency: 10,
+      external: ["axios"],
+      packagePath: `${__dirname}/package.json`,
     },
     autoswagger: {
       host: "sk3bwmuscd.execute-api.us-east-1.amazonaws.com/dev",
