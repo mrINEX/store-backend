@@ -6,7 +6,7 @@ import getProduct from "@functions/getProduct";
 const serverlessConfiguration: AWS = {
   service: "store-backend",
   frameworkVersion: "3",
-  plugins: ["serverless-esbuild"],
+  plugins: ["serverless-esbuild", "serverless-auto-swagger"],
   provider: {
     name: "aws",
     runtime: "nodejs18.x",
@@ -34,6 +34,10 @@ const serverlessConfiguration: AWS = {
       define: { "require.resolve": undefined },
       platform: "node",
       concurrency: 10,
+    },
+    autoswagger: {
+      host: "sk3bwmuscd.execute-api.us-east-1.amazonaws.com/dev",
+      typefiles: ["./swagger"],
     },
   },
 };
