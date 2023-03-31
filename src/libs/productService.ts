@@ -20,8 +20,6 @@ let productService: ProductService | undefined;
 
 /**
  * Singleton
- *
- * @returns ProductService
  */
 export function getProductService() {
   if (productService == null) {
