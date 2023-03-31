@@ -41,7 +41,7 @@ class ProductService {
     this.products = this.getProducts();
   }
 
-  private getProducts(): Promise<Product[]> {
+  private async getProducts(): Promise<Product[]> {
     const client_id =
       "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
     const cats = [
@@ -57,7 +57,7 @@ class ProductService {
       { cat: "Cornish Rex", id: uuidv4() },
       { cat: "Russian Blue", id: uuidv4() },
     ];
-    return Promise.all(
+    return await Promise.all(
       cats.map(async ({ cat, id: uuid }) => {
         const res = await axios.get(
           `https://api.unsplash.com/search/photos/?client_id=${client_id}&query=${cat}&per_page=1`
