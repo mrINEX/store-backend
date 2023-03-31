@@ -16,11 +16,7 @@ export type Product = {
   image?: string;
 };
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-}
+let productService: ProductService | undefined;
 
 /**
  * Singleton
@@ -28,7 +24,6 @@ function getRandomInt(min, max) {
  * @returns ProductService
  */
 export function getProductService() {
-  let productService: ProductService | undefined;
   if (productService == null) {
     productService = new ProductService();
   }
@@ -63,12 +58,18 @@ class ProductService {
             title: cat,
             description: res.data.results[0].description,
             id: uuid,
-            price: getRandomInt(1, 50),
+            price: this.getRandomInt(1, 50),
             image: res.data.results[0].urls.small,
           };
         })
       );
     }
     return this.mock;
+  }
+
+  private getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
   }
 }
