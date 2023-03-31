@@ -36,14 +36,13 @@ export function getProductService() {
 }
 
 class ProductService {
-  private cats: { cat: string; id: string }[];
-  constructor() {
-    this.cats = this.getCats();
+  private mock: { cat: string; id: string }[];
+  get cats() {
+    return this.getCats();
   }
-
   private getCats() {
-    if (this.cats == null) {
-      this.cats = [
+    if (this.mock == null) {
+      this.mock = [
         { cat: "Ragdoll", id: uuidv4() },
         { cat: "Exotic Shorthair", id: uuidv4() },
         { cat: "British Shorthair", id: uuidv4() },
@@ -57,7 +56,7 @@ class ProductService {
         { cat: "Russian Blue", id: uuidv4() },
       ];
     }
-    return this.cats;
+    return this.mock;
   }
 
   public async getProducts(): Promise<Product[]> {
