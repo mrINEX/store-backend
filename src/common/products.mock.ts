@@ -36,47 +36,39 @@ export function getProductService() {
 }
 
 class ProductService {
-  private mock: { cat: string; id: string }[];
-  get cats() {
-    return this.getCats();
-  }
-  private getCats() {
+  private mock: Promise<Product[]>;
+  public async getProducts(): Promise<Product[]> {
     if (this.mock == null) {
-      this.mock = [
-        { cat: "Ragdoll", id: uuidv4() },
-        { cat: "Exotic Shorthair", id: uuidv4() },
-        { cat: "British Shorthair", id: uuidv4() },
-        { cat: "Maine Coon", id: uuidv4() },
-        { cat: "Devon Rex", id: uuidv4() },
-        { cat: "Sphynx", id: uuidv4() },
-        { cat: "Scottish Fold", id: uuidv4() },
-        { cat: "Abyssinian", id: uuidv4() },
-        { cat: "Siamese", id: uuidv4() },
-        { cat: "Cornish Rex", id: uuidv4() },
-        { cat: "Russian Blue", id: uuidv4() },
-      ];
+      this.mock = Promise.all(
+        [
+          { cat: "Ragdoll", id: uuidv4() },
+          { cat: "Exotic Shorthair", id: uuidv4() },
+          { cat: "British Shorthair", id: uuidv4() },
+          { cat: "Maine Coon", id: uuidv4() },
+          { cat: "Devon Rex", id: uuidv4() },
+          { cat: "Sphynx", id: uuidv4() },
+          { cat: "Scottish Fold", id: uuidv4() },
+          { cat: "Abyssinian", id: uuidv4() },
+          { cat: "Siamese", id: uuidv4() },
+          { cat: "Cornish Rex", id: uuidv4() },
+          { cat: "Russian Blue", id: uuidv4() },
+        ].map(async ({ cat, id: uuid }) => {
+          const client_id =
+            "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
+          const res = await axios.get(
+            `https://api.unsplash.com/search/photos/?client_id=${client_id}&query=${cat}&per_page=1`
+          );
+
+          return {
+            title: cat,
+            description: res.data.results[0].description,
+            id: uuid,
+            price: getRandomInt(1, 50),
+            image: res.data.results[0].urls.small,
+          };
+        })
+      );
     }
     return this.mock;
-  }
-
-  public async getProducts(): Promise<Product[]> {
-    const client_id =
-      "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
-
-    return await Promise.all(
-      this.cats.map(async ({ cat, id: uuid }) => {
-        const res = await axios.get(
-          `https://api.unsplash.com/search/photos/?client_id=${client_id}&query=${cat}&per_page=1`
-        );
-
-        return {
-          title: cat,
-          description: res.data.results[0].description,
-          id: uuid,
-          price: getRandomInt(1, 50),
-          image: res.data.results[0].urls.small,
-        };
-      })
-    );
   }
 }
