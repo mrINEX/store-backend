@@ -39,7 +39,6 @@ const serverlessConfiguration: AWS = {
     },
     autoswagger: {
       host: "sk3bwmuscd.execute-api.us-east-1.amazonaws.com/dev",
-      typefiles: ["./swagger"],
     },
   },
 };

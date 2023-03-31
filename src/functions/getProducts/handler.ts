@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
-import { getProductService } from "../../common/products.mock";
+import { getProductService } from "../../libs/productService";
 
 import schema from "./schema";
 const productService = getProductService();
