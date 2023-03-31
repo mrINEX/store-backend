@@ -1,11 +1,12 @@
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+
 // export const ProductSchema = Yup.object({
 //   id: Yup.string(),
 //   title: Yup.string().required().default(""),
 //   description: Yup.string().default(""),
 //   price: Yup.number().positive().required().defined().default(0),
 // });
-
-import axios from "axios";
 
 export type Product = {
   id: string;
@@ -16,17 +17,17 @@ export type Product = {
 };
 
 const cats = [
-  "Ragdoll",
-  "Exotic Shorthair",
-  "British Shorthair",
-  "Maine Coon",
-  "Devon Rex",
-  "Sphynx",
-  "Scottish Fold",
-  "Abyssinian",
-  "Siamese",
-  "Cornish Rex",
-  "Russian Blue",
+  { cat: "Ragdoll", id: uuidv4() },
+  { cat: "Exotic Shorthair", id: uuidv4() },
+  { cat: "British Shorthair", id: uuidv4() },
+  { cat: "Maine Coon", id: uuidv4() },
+  { cat: "Devon Rex", id: uuidv4() },
+  { cat: "Sphynx", id: uuidv4() },
+  { cat: "Scottish Fold", id: uuidv4() },
+  { cat: "Abyssinian", id: uuidv4() },
+  { cat: "Siamese", id: uuidv4() },
+  { cat: "Cornish Rex", id: uuidv4() },
+  { cat: "Russian Blue", id: uuidv4() },
 ];
 
 function getRandomInt(min, max) {
@@ -39,7 +40,7 @@ const client_id =
   "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
 
 export const mockProducts: Promise<Product[]> = Promise.all(
-  cats.map(async (cat, i) => {
+  cats.map(async ({ cat, id: uuid }) => {
     const res = await axios.get(
       `https://api.unsplash.com/search/photos/?client_id=${client_id}&query=${cat}&per_page=1`
     );
@@ -47,48 +48,9 @@ export const mockProducts: Promise<Product[]> = Promise.all(
     return {
       title: cat,
       description: res.data.results[0].description,
-      id: `${i}`,
+      id: uuid,
       price: getRandomInt(1, 50),
       image: res.data.results[0].urls.small,
     };
   })
 );
-
-// export const mockProducts: Product[] = [
-//   {
-//     description: "Short Product Description1",
-//     id: "7567ec4b-b10c-48c5-9345-fc73c48a80aa",
-//     price: 24,
-//     title: "ProductOne",
-//   },
-//   {
-//     description: "Short Product Description7",
-//     id: "7567ec4b-b10c-48c5-9345-fc73c48a80a1",
-//     price: 15,
-//     title: "ProductTitle",
-//   },
-//   {
-//     description: "Short Product Description2",
-//     id: "7567ec4b-b10c-48c5-9345-fc73c48a80a3",
-//     price: 23,
-//     title: "Product",
-//   },
-//   {
-//     description: "Short Product Description4",
-//     id: "7567ec4b-b10c-48c5-9345-fc73348a80a1",
-//     price: 15,
-//     title: "ProductTest",
-//   },
-//   {
-//     description: "Short Product Description1",
-//     id: "7567ec4b-b10c-48c5-9445-fc73c48a80a2",
-//     price: 23,
-//     title: "Product2",
-//   },
-//   {
-//     description: "Short Product Description7",
-//     id: "7567ec4b-b10c-45c5-9345-fc73c48a80a1",
-//     price: 15,
-//     title: "ProductName",
-//   },
-// ];
