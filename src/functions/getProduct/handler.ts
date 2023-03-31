@@ -2,13 +2,15 @@ import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
 import schema from "./schema";
-import { mockProducts } from "../../common/products.mock";
+import { getProductService } from "../../common/products.mock";
 import { NotFound } from "http-errors";
+
+const productService = getProductService();
 
 const getProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   event
 ) => {
-  const products = await mockProducts;
+  const products = await productService.products;
   const product = products.find(
     (product) => product.id === event.pathParameters.id
   );
