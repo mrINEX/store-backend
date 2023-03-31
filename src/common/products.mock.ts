@@ -29,29 +29,35 @@ function getRandomInt(min, max) {
  */
 export function getProductService() {
   let productService: ProductService | undefined;
-  if (productService) {
-    return productService;
+  if (productService == null) {
+    productService = new ProductService();
   }
-  productService = new ProductService();
   return productService;
 }
 
 class ProductService {
-  public cats: { cat: string; id: string }[];
+  private cats: { cat: string; id: string }[];
   constructor() {
-    this.cats = [
-      { cat: "Ragdoll", id: uuidv4() },
-      { cat: "Exotic Shorthair", id: uuidv4() },
-      { cat: "British Shorthair", id: uuidv4() },
-      { cat: "Maine Coon", id: uuidv4() },
-      { cat: "Devon Rex", id: uuidv4() },
-      { cat: "Sphynx", id: uuidv4() },
-      { cat: "Scottish Fold", id: uuidv4() },
-      { cat: "Abyssinian", id: uuidv4() },
-      { cat: "Siamese", id: uuidv4() },
-      { cat: "Cornish Rex", id: uuidv4() },
-      { cat: "Russian Blue", id: uuidv4() },
-    ];
+    this.cats = this.getCats();
+  }
+
+  private getCats() {
+    if (this.cats == null) {
+      this.cats = [
+        { cat: "Ragdoll", id: uuidv4() },
+        { cat: "Exotic Shorthair", id: uuidv4() },
+        { cat: "British Shorthair", id: uuidv4() },
+        { cat: "Maine Coon", id: uuidv4() },
+        { cat: "Devon Rex", id: uuidv4() },
+        { cat: "Sphynx", id: uuidv4() },
+        { cat: "Scottish Fold", id: uuidv4() },
+        { cat: "Abyssinian", id: uuidv4() },
+        { cat: "Siamese", id: uuidv4() },
+        { cat: "Cornish Rex", id: uuidv4() },
+        { cat: "Russian Blue", id: uuidv4() },
+      ];
+    }
+    return this.cats;
   }
 
   public async getProducts(): Promise<Product[]> {
