@@ -36,17 +36,23 @@ class ProductService {
     if (this.mock == null) {
       this.mock = Promise.all(
         [
-          { cat: "Ragdoll", id: uuidv4() },
-          { cat: "Exotic Shorthair", id: uuidv4() },
-          { cat: "British Shorthair", id: uuidv4() },
-          { cat: "Maine Coon", id: uuidv4() },
-          { cat: "Devon Rex", id: uuidv4() },
-          { cat: "Sphynx", id: uuidv4() },
-          { cat: "Scottish Fold", id: uuidv4() },
-          { cat: "Abyssinian", id: uuidv4() },
-          { cat: "Siamese", id: uuidv4() },
-          { cat: "Cornish Rex", id: uuidv4() },
-          { cat: "Russian Blue", id: uuidv4() },
+          { cat: "Ragdoll", id: "7eadbebe-0900-4b10-afde-d2a303bcfbd9" },
+          {
+            cat: "Exotic Shorthair",
+            id: "0301dd99-39a2-4781-81e3-77e6162827b2",
+          },
+          {
+            cat: "British Shorthair",
+            id: "f6915b02-321a-47aa-b712-76580f9e27bb",
+          },
+          { cat: "Maine Coon", id: "f3fbcae8-4dce-4c68-bda0-103a92adc4a3" },
+          { cat: "Devon Rex", id: "e0ff5437-a160-47b7-af7a-ba8b300b6625" },
+          { cat: "Sphynx", id: "bf2144c7-6762-4889-839a-6b1e2cf3d823" },
+          { cat: "Scottish Fold", id: "84b32bc9-ff22-49de-b94d-c02eb5a9829f" },
+          { cat: "Abyssinian", id: "0134c71c-3931-4e38-8aae-219bd2156da7" },
+          { cat: "Siamese", id: "e211c2c1-f305-4705-ad5d-ef87527b03d0" },
+          { cat: "Cornish Rex", id: "88f6353b-3df9-4ab7-bec4-aa9708a1f4e1" },
+          { cat: "Russian Blue", id: "f5a3565a-6806-4da8-acd6-15aa467a7f9d" },
         ].map(async ({ cat, id: uuid }) => {
           const client_id =
             "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
