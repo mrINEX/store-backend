@@ -10,7 +10,7 @@ const productService = getProductService();
 const getProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   event
 ) => {
-  const products = await productService.products;
+  const products = await productService.getProducts();
   const product = products.find(
     (product) => product.id === event.pathParameters.id
   );

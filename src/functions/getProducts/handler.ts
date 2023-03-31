@@ -9,7 +9,7 @@ const productService = getProductService();
 const getProducts: ValidatedEventAPIGatewayProxyEvent<
   typeof schema
 > = async () => {
-  const products = await productService.products;
+  const products = await productService.getProducts();
   return formatJSONResponse({
     data: products,
     message: `products`,

@@ -27,24 +27,19 @@ function getRandomInt(min, max) {
  *
  * @returns ProductService
  */
-export function getProductService(): ProductService {
+export function getProductService() {
   let productService: ProductService | undefined;
   if (productService) {
     return productService;
   }
   productService = new ProductService();
+  return productService;
 }
 
 class ProductService {
-  public products: Promise<Product[]>;
+  public cats: { cat: string; id: string }[];
   constructor() {
-    this.products = this.getProducts();
-  }
-
-  private async getProducts(): Promise<Product[]> {
-    const client_id =
-      "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
-    const cats = [
+    this.cats = [
       { cat: "Ragdoll", id: uuidv4() },
       { cat: "Exotic Shorthair", id: uuidv4() },
       { cat: "British Shorthair", id: uuidv4() },
@@ -57,8 +52,14 @@ class ProductService {
       { cat: "Cornish Rex", id: uuidv4() },
       { cat: "Russian Blue", id: uuidv4() },
     ];
+  }
+
+  public async getProducts(): Promise<Product[]> {
+    const client_id =
+      "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
+
     return await Promise.all(
-      cats.map(async ({ cat, id: uuid }) => {
+      this.cats.map(async ({ cat, id: uuid }) => {
         const res = await axios.get(
           `https://api.unsplash.com/search/photos/?client_id=${client_id}&query=${cat}&per_page=1`
         );
