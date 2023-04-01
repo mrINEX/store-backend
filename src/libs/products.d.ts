@@ -18,4 +18,4 @@ export type ProductsResponse = {
   message: "products";
 };
 
-export type ProductNotFound = "Product not found";
+export type NotFound = { message: "Not Found" };

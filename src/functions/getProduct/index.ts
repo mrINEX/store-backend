@@ -16,7 +16,7 @@ export default <AWS["functions"]>{
           },
           404: {
             description: "product not found",
-            bodyType: "ProductNotFound",
+            bodyType: "NotFound",
           },
           502: "server error",
         },

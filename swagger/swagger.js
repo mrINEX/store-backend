@@ -60,7 +60,7 @@
           "404": {
             "description": "product not found",
             "schema": {
-              "$ref": "#/definitions/ProductNotFound"
+              "$ref": "#/definitions/NotFound"
             }
           },
           "502": {
@@ -156,12 +156,22 @@
       "title": "ProductsResponse",
       "type": "object"
     },
-    "ProductNotFound": {
-      "title": "ProductNotFound",
-      "enum": [
-        "Product not found"
+    "NotFound": {
+      "properties": {
+        "message": {
+          "title": "NotFound.message",
+          "enum": [
+            "Not Found"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "message"
       ],
-      "type": "string"
+      "additionalProperties": false,
+      "title": "NotFound",
+      "type": "object"
     }
   },
   "securityDefinitions": {}
