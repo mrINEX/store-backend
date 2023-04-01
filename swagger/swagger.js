@@ -20,7 +20,10 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "200 response"
+            "description": "products",
+            "schema": {
+              "$ref": "#/definitions/Products"
+            }
           }
         }
       }
@@ -46,13 +49,71 @@
         ],
         "responses": {
           "200": {
-            "description": "200 response"
+            "description": "product",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          },
+          "404": {
+            "description": "product not found",
+            "schema": {
+              "$ref": "#/definitions/ProductNotFound"
+            }
           }
         }
       }
     }
   },
-  "definitions": {},
+  "definitions": {
+    "Product": {
+      "properties": {
+        "id": {
+          "title": "Product.id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Product.title",
+          "type": "string"
+        },
+        "description": {
+          "title": "Product.description",
+          "type": "string"
+        },
+        "price": {
+          "title": "Product.price",
+          "type": "number"
+        },
+        "image": {
+          "title": "Product.image",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "price"
+      ],
+      "additionalProperties": false,
+      "title": "Product",
+      "type": "object"
+    },
+    "Products": {
+      "items": {
+        "$ref": "#/definitions/Product",
+        "title": "Products.[]"
+      },
+      "title": "Products.[]",
+      "type": "array"
+    },
+    "ProductNotFound": {
+      "title": "ProductNotFound",
+      "enum": [
+        "Product not found"
+      ],
+      "type": "string"
+    }
+  },
   "securityDefinitions": {},
   "host": "sk3bwmuscd.execute-api.us-east-1.amazonaws.com/dev"
 };

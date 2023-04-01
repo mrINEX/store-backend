@@ -10,6 +10,12 @@ export default <AWS["functions"]>{
         method: "get",
         path: "products",
         cors: true,
+        responses: {
+          200: {
+            description: "products",
+            bodyType: "Products",
+          },
+        },
         // request: {
         //   schemas: {
         //     "application/json": schema,

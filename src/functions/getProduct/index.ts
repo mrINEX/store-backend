@@ -9,6 +9,16 @@ export default <AWS["functions"]>{
         method: "get",
         path: "products/{id}",
         cors: true,
+        responses: {
+          200: {
+            description: "product",
+            bodyType: "Product",
+          },
+          404: {
+            description: "product not found",
+            bodyType: "ProductNotFound",
+          },
+        },
       },
     },
   ],
