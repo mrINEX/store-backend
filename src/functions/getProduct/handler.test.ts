@@ -11,7 +11,13 @@ const mock = {
     },
     statusCode: 200,
   },
-  product: {},
+  product: {
+    id: "1",
+    title: "rew",
+    description: "jet",
+    price: 33,
+    image: "http//sd",
+  },
 };
 
 jest.mock("libs/productService", () => {
@@ -30,14 +36,6 @@ describe("getProduct", () => {
     const context = <Context>{};
     const callback: Callback = () => {};
 
-    mock.product = {
-      id: "1",
-      title: "rew",
-      description: "jet",
-      price: 33,
-      image: "http//sd",
-    };
-
     const response = await getProduct(event, context, callback);
     expect(response).toMatchObject({
       ...mock.success,
@@ -51,14 +49,6 @@ describe("getProduct", () => {
     } as unknown as ValidatedAPIGatewayProxyEvent<undefined>;
     const context = <Context>{};
     const callback: Callback = () => {};
-
-    mock.product = {
-      id: "1",
-      title: "rew",
-      description: "jet",
-      price: 33,
-      image: "http//sd",
-    };
 
     await expect(getProduct(event, context, callback)).rejects.toThrowError(
       NotFound
