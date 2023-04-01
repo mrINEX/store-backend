@@ -12,12 +12,13 @@ export default <AWS["functions"]>{
         responses: {
           200: {
             description: "product",
-            bodyType: "Product",
+            bodyType: "ProductResponse",
           },
           404: {
             description: "product not found",
             bodyType: "ProductNotFound",
           },
+          502: "server error",
         },
       },
     },

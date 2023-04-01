@@ -24,6 +24,9 @@
             "schema": {
               "$ref": "#/definitions/Products"
             }
+          },
+          "502": {
+            "description": "server error"
           }
         }
       }
@@ -59,6 +62,9 @@
             "schema": {
               "$ref": "#/definitions/ProductNotFound"
             }
+          },
+          "502": {
+            "description": "server error"
           }
         }
       }

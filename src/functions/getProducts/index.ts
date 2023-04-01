@@ -13,8 +13,9 @@ export default <AWS["functions"]>{
         responses: {
           200: {
             description: "products",
-            bodyType: "Products",
+            bodyType: "ProductsResponse",
           },
+          502: "server error",
         },
         // request: {
         //   schemas: {
