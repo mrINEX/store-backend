@@ -22,7 +22,7 @@
           "200": {
             "description": "products",
             "schema": {
-              "$ref": "#/definitions/Products"
+              "$ref": "#/definitions/ProductsResponse"
             }
           },
           "502": {
@@ -54,7 +54,7 @@
           "200": {
             "description": "product",
             "schema": {
-              "$ref": "#/definitions/Product"
+              "$ref": "#/definitions/ProductResponse"
             }
           },
           "404": {
@@ -104,6 +104,28 @@
       "title": "Product",
       "type": "object"
     },
+    "ProductResponse": {
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Product",
+          "title": "ProductResponse.data"
+        },
+        "message": {
+          "title": "ProductResponse.message",
+          "enum": [
+            "product"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "message"
+      ],
+      "additionalProperties": false,
+      "title": "ProductResponse",
+      "type": "object"
+    },
     "Products": {
       "items": {
         "$ref": "#/definitions/Product",
@@ -111,6 +133,28 @@
       },
       "title": "Products.[]",
       "type": "array"
+    },
+    "ProductsResponse": {
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Products",
+          "title": "ProductsResponse.data"
+        },
+        "message": {
+          "title": "ProductsResponse.message",
+          "enum": [
+            "products"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "message"
+      ],
+      "additionalProperties": false,
+      "title": "ProductsResponse",
+      "type": "object"
     },
     "ProductNotFound": {
       "title": "ProductNotFound",
@@ -120,6 +164,5 @@
       "type": "string"
     }
   },
-  "securityDefinitions": {},
-  "host": "sk3bwmuscd.execute-api.us-east-1.amazonaws.com/dev"
+  "securityDefinitions": {}
 };

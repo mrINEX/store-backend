@@ -38,7 +38,6 @@ const serverlessConfiguration: AWS = {
       packagePath: `${__dirname}/package.json`,
     },
     autoswagger: {
-      host: "sk3bwmuscd.execute-api.us-east-1.amazonaws.com/dev",
       typefiles: ["./src/libs/products.d.ts"],
     },
   },

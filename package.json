@@ -7,7 +7,7 @@
     "sls:rm": "serverless remove",
     "sls:pkg": "serverless package",
     "sls:dpl": "serverless deploy",
-    "sls:run:local": "sls invoke local -f getProducts --path src/functions/getProducts/mock.json",
+    "sls:run:local": "sls invoke local -f getProduct --path src/functions/getProduct/mock.json",
     "test": "jest test",
     "test:debug": "node --inspect-brk ./node_modules/jest-cli/bin/jest.js"
   },
