@@ -1,7 +1,7 @@
 import type { AWS } from "@serverless/typescript";
 
-import getProducts from "@functions/getProducts";
-import getProduct from "@functions/getProduct";
+import getProducts from "functions/getProducts";
+import getProduct from "functions/getProduct";
 
 const serverlessConfiguration: AWS = {
   service: "store-backend",
