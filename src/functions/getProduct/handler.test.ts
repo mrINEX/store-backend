@@ -45,7 +45,7 @@ describe("getProduct", () => {
     });
   });
 
-  test("should return product by id", async () => {
+  test("should throw error product by id not found", async () => {
     const event = {
       pathParameters: { id: "999999999" },
     } as unknown as ValidatedAPIGatewayProxyEvent<undefined>;
