@@ -67,13 +67,11 @@ export const run = async () => {
 run();
 
 const putItem = async (table: string, item: Product) => {
-  const { id: pk, ...rest } = item;
   const params = {
     TableName: table,
     Item: {
-      primaryKey: pk,
-      id: pk,
-      ...rest,
+      primaryKey: item.id,
+      ...item,
     },
   };
   try {
