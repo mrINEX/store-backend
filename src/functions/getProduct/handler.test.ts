@@ -1,4 +1,4 @@
-import { ValidatedAPIGatewayProxyEvent } from "libs/api-gateway";
+import { ValidatedAPIGatewayProxyEvent } from "../../libs/api-gateway";
 import { Callback, Context } from "aws-lambda";
 import { getProduct } from "./handler";
 import { NotFound } from "http-errors";
@@ -20,7 +20,7 @@ const mock = {
   },
 };
 
-jest.mock("libs/productService", () => {
+jest.mock("../../libs/productService", () => {
   return {
     getProductService: () => ({
       getProducts: () => [mock.product],
