@@ -6,16 +6,18 @@
   "scripts": {
     "tsc": "tsc",
     "tsc:v": "npm run tsc -- -v",
-    "tsc:run:ddb": "npm run tsc",
+    "tsc:run": "npm run tsc",
     "sls:rm": "serverless remove",
     "sls:pkg": "serverless package",
     "sls:dpl": "serverless deploy",
     "sls:run:local": "sls invoke local -f getProduct --path src/functions/getProduct/mock.json",
     "test": "jest test",
     "test:debug": "node --inspect-brk ./node_modules/jest-cli/bin/jest.js",
-    "ddb:create:v1": "npx ts-node ./src/libs/ddbCreate.ts",
+    "ddb:create:ts-node": "npx ts-node ./src/libs/ddbCreate.ts",
     "ddb:create": "node ./lib/src/libs/ddbCreate.js",
-    "tsc:run:ddb:create": "npm run tsc && npm run ddb:create"
+    "ddb:fill": "node ./lib/src/libs/ddbFill.js",
+    "tsc:run:ddb:create": "npm run tsc && npm run ddb:create",
+    "tsc:run:ddb:fill": "npm run tsc && npm run ddb:fill"
   },
   "engines": {
     "node": ">=18.14.0"

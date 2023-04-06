@@ -16,6 +16,11 @@ export type Product = {
   image?: string;
 };
 
+export type Stocks = {
+  product_id: string;
+  count: number;
+};
+
 let productService: ProductService | undefined;
 
 /**
@@ -71,7 +76,7 @@ class ProductService {
     return this.mock;
   }
 
-  private getRandomInt(min, max) {
+  public getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
