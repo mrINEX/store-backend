@@ -8,4 +8,9 @@ export const ddbClient = new DynamoDBClient({
   credentials: fromIni({ profile: PROFILE }),
 });
 
+export const client = new DynamoDBClient({
+  region: REGION,
+});
+
 export const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
+export const docClient = DynamoDBDocumentClient.from(client);

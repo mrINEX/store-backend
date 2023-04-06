@@ -1,10 +1,14 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from "../../libs/api-gateway";
 import { formatJSONResponse } from "../../libs/api-gateway";
+import { docClient } from "../../libs/ddbClient";
 import { middyfy } from "../../libs/lambda";
-import { getProductService } from "../../libs/productService";
+import { getDdbProductService } from "../../libs/productService";
 import schema from "./schema";
 
-const productService = getProductService();
+const productService = getDdbProductService(
+  docClient,
+  process.env.PRODUCTS_TABLE
+);
 
 export const getProducts: ValidatedEventAPIGatewayProxyEvent<
   typeof schema

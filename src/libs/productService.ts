@@ -1,3 +1,10 @@
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  GetCommandOutput,
+  QueryCommand,
+} from "@aws-sdk/lib-dynamodb";
 import axios from "axios";
 // import { v4 as uuidv4 } from "uuid";
 
@@ -22,6 +29,7 @@ export type Stocks = {
 };
 
 let productService: ProductService | undefined;
+let ddbProductService: DdbProductService | undefined;
 
 /**
  * Singleton
@@ -31,6 +39,47 @@ export function getProductService() {
     productService = new ProductService();
   }
   return productService;
+}
+
+/**
+ * Singleton ddb
+ */
+export function getDdbProductService(
+  client: DynamoDBDocumentClient,
+  table: string
+) {
+  if (ddbProductService == null) {
+    ddbProductService = new DdbProductService(client, table);
+  }
+  return ddbProductService;
+}
+
+class DdbProductService {
+  constructor(private client: DynamoDBClient, private table: string) {}
+
+  public async getProduct(id: string): Promise<GetCommandOutput> {
+    return await this.client.send(
+      new GetCommand({
+        TableName: this.table,
+        Key: {
+          pk: this.table,
+          sk: id,
+        },
+      })
+    );
+  }
+
+  public async getProducts(): Promise<GetCommandOutput["Item"]> {
+    const products = await this.client.send(
+      new QueryCommand({
+        TableName: this.table,
+        KeyConditionExpression: "pk = :pk",
+        ExpressionAttributeValues: { ":pk": this.table },
+      })
+    );
+
+    return products.Items;
+  }
 }
 
 class ProductService {
