@@ -36,7 +36,8 @@ const putItemProducts = async (table: string, item: Product) => {
   const params = {
     TableName: table,
     Item: {
-      primaryKey: item.id,
+      pk: table,
+      sk: item.id,
       ...item,
     },
   };
@@ -52,7 +53,8 @@ const putItemStocks = async (table: string, item: Stocks) => {
   const params = {
     TableName: table,
     Item: {
-      primaryKey: item.product_id,
+      pk: table,
+      sk: item.product_id,
       ...item,
     },
   };
