@@ -29,6 +29,29 @@
             "description": "server error"
           }
         }
+      },
+      "post": {
+        "summary": "createProduct",
+        "description": "",
+        "operationId": "createProduct.post.products",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "product",
+            "schema": {
+              "$ref": "#/definitions/ProductsResponse"
+            }
+          },
+          "502": {
+            "description": "server error"
+          }
+        }
       }
     },
     "/products/{id}": {

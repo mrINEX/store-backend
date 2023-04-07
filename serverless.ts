@@ -2,6 +2,7 @@ import type { AWS } from "@serverless/typescript";
 
 import getProducts from "./src/functions/getProducts";
 import getProduct from "./src/functions/getProduct";
+import createProduct from "./src/functions/createProduct";
 
 const serverlessConfiguration: AWS = {
   service: "store-backend",
@@ -19,7 +20,7 @@ const serverlessConfiguration: AWS = {
     iamRoleStatements: [
       {
         Effect: "Allow",
-        Action: ["dynamodb:Query", "dynamodb:GetItem"],
+        Action: ["dynamodb:Query", "dynamodb:GetItem", "dynamodb:PutItem"],
         Resource: "arn:aws:dynamodb:*",
       },
     ],
@@ -31,7 +32,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { getProducts, getProduct },
+  functions: { getProducts, getProduct, createProduct },
   package: { individually: true },
   custom: {
     esbuild: {

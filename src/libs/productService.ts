@@ -2,6 +2,7 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
   GetCommand,
+  PutCommand,
   QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 import axios from "axios";
@@ -86,6 +87,20 @@ class DdbStockService {
 
     return products.Items as Stock[];
   }
+
+  public async putStock(item: Stock) {
+    const params = {
+      TableName: this.table,
+      Item: {
+        pk: this.table,
+        sk: item.product_id,
+        ...item,
+      },
+    };
+
+    const data = await this.client.send(new PutCommand(params));
+    console.log("Success - stock added or updated", data);
+  }
 }
 
 class DdbProductService {
@@ -122,11 +137,37 @@ class DdbProductService {
 
     return products.Items as Product[];
   }
+
+  public async putProduct(item: Omit<Product, "count" | "product_id">) {
+    const image = await this.getImage(item.title);
+
+    const params = {
+      TableName: this.table,
+      Item: {
+        pk: this.table,
+        sk: item.id,
+        image,
+        ...item,
+      },
+    };
+    const data = await this.client.send(new PutCommand(params));
+    console.log("Success - product added or updated", data);
+  }
+
+  public async getImage(title: string) {
+    const client_id =
+      "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
+    const res = await axios.get(
+      `https://api.unsplash.com/search/photos/?client_id=${client_id}&query=${title}&per_page=1`
+    );
+
+    return res.data.results[0].urls.small;
+  }
 }
 
 class ProductService {
-  private mock: Promise<Product[]>;
-  public async getProducts(): Promise<Product[]> {
+  private mock: Promise<Omit<Product, "count" | "product_id">[]>;
+  public async getProducts(): Promise<Omit<Product, "count" | "product_id">[]> {
     if (this.mock == null) {
       this.mock = Promise.all(
         [

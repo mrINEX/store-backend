@@ -1,7 +1,7 @@
 import * as clientDynamodb from "@aws-sdk/client-dynamodb";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { ddbClient, ddbDocClient } from "./ddbClient";
-import { Product, Stocks, getProductService } from "./productService";
+import { Product, Stock, getProductService } from "./productService";
 
 export const run = async () => {
   try {
@@ -32,7 +32,10 @@ export const run = async () => {
 };
 run();
 
-const putItemProducts = async (table: string, item: Product) => {
+const putItemProducts = async (
+  table: string,
+  item: Omit<Product, "count" | "product_id">
+) => {
   const params = {
     TableName: table,
     Item: {
@@ -49,7 +52,7 @@ const putItemProducts = async (table: string, item: Product) => {
   }
 };
 
-const putItemStocks = async (table: string, item: Stocks) => {
+const putItemStocks = async (table: string, item: Stock) => {
   const params = {
     TableName: table,
     Item: {
