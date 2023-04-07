@@ -2,7 +2,6 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,
   GetCommand,
-  GetCommandOutput,
   QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 import axios from "axios";
@@ -15,24 +14,23 @@ import axios from "axios";
 //   price: Yup.number().positive().required().defined().default(0),
 // });
 
-export type Product = {
+export interface Product extends Stock {
   id: string;
   title: string;
   description: string;
   price: number;
   image?: string;
-};
+}
 
-export type Stocks = {
+export interface Stock {
   product_id: string;
   count: number;
-};
+}
 
 let productService: ProductService | undefined;
-let ddbProductService: DdbProductService | undefined;
 
 /**
- * Singleton
+ * singleton
  */
 export function getProductService() {
   if (productService == null) {
@@ -42,23 +40,30 @@ export function getProductService() {
 }
 
 /**
- * Singleton ddb
+ * product
  */
 export function getDdbProductService(
   client: DynamoDBDocumentClient,
   table: string
 ) {
-  if (ddbProductService == null) {
-    ddbProductService = new DdbProductService(client, table);
-  }
-  return ddbProductService;
+  return new DdbProductService(client, table);
 }
 
-class DdbProductService {
+/**
+ * stock
+ */
+export function getDdbStockService(
+  client: DynamoDBDocumentClient,
+  table: string
+) {
+  return new DdbStockService(client, table);
+}
+
+class DdbStockService {
   constructor(private client: DynamoDBClient, private table: string) {}
 
-  public async getProduct(id: string): Promise<GetCommandOutput> {
-    return await this.client.send(
+  public async getStock(id: string): Promise<Stock> {
+    const product = await this.client.send(
       new GetCommand({
         TableName: this.table,
         Key: {
@@ -67,9 +72,10 @@ class DdbProductService {
         },
       })
     );
+    return product.Item as Stock;
   }
 
-  public async getProducts(): Promise<GetCommandOutput["Item"]> {
+  public async getStocks(): Promise<Stock[]> {
     const products = await this.client.send(
       new QueryCommand({
         TableName: this.table,
@@ -78,7 +84,43 @@ class DdbProductService {
       })
     );
 
-    return products.Items;
+    return products.Items as Stock[];
+  }
+}
+
+class DdbProductService {
+  constructor(private client: DynamoDBClient, private table: string) {}
+
+  public merge(products: Product[], stocks: Stock[]) {
+    for (const product of products) {
+      const stock = stocks.find((stock) => stock.product_id === product.id);
+      product.count = stock.count;
+    }
+  }
+
+  public async getProduct(id: string): Promise<Product> {
+    const product = await this.client.send(
+      new GetCommand({
+        TableName: this.table,
+        Key: {
+          pk: this.table,
+          sk: id,
+        },
+      })
+    );
+    return product.Item as Product;
+  }
+
+  public async getProducts(): Promise<Product[]> {
+    const products = await this.client.send(
+      new QueryCommand({
+        TableName: this.table,
+        KeyConditionExpression: "pk = :pk",
+        ExpressionAttributeValues: { ":pk": this.table },
+      })
+    );
+
+    return products.Items as Product[];
   }
 }
 
