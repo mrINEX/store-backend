@@ -8,8 +8,20 @@ import httpErrorHandler from "@middy/http-error-handler";
 export const middyfy = (handler) => {
   return middy(handler)
     .use(middyJsonBodyParser())
+    .use(logger())
     .use(httpErrorHandler({ fallbackMessage: "Server error" }));
 };
+
+function logger(): middy.MiddlewareObj {
+  return {
+    before: (request) => {
+      console.log("before", JSON.stringify(request, null, 2));
+    },
+    after: (request) => {
+      console.log("after", JSON.stringify(request, null, 2));
+    },
+  };
+}
 
 // if (schema !== undefined) {
 //   middyfiedHandler = middyfiedHandler.use(middyValidator(schema));
