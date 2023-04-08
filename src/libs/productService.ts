@@ -6,14 +6,6 @@ import {
   QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 import axios from "axios";
-// import { v4 as uuidv4 } from "uuid";
-
-// export const ProductSchema = Yup.object({
-//   id: Yup.string(),
-//   title: Yup.string().required().default(""),
-//   description: Yup.string().default(""),
-//   price: Yup.number().positive().required().defined().default(0),
-// });
 
 export interface Product extends Stock {
   id: string;
