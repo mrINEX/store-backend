@@ -15,10 +15,10 @@ export const middyfy = (handler) => {
 function logger(): middy.MiddlewareObj {
   return {
     before: (request) => {
-      console.log("before", JSON.stringify(request, null, 2));
+      console.log("Incoming event", JSON.stringify(request, null, 2));
     },
     after: (request) => {
-      console.log("after", JSON.stringify(request, null, 2));
+      console.log("Outgoing event", JSON.stringify(request, null, 2));
     },
   };
 }
