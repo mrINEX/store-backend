@@ -1,4 +1,3 @@
-import httpError from "http-errors";
 import { ValidatedEventAPIGatewayProxyEvent } from "../../libs/api-gateway";
 import { formatJSONResponse } from "../../libs/api-gateway";
 import { docClient } from "../../libs/ddbClient";
@@ -18,20 +17,16 @@ const stockService = getDdbStockService(docClient, STOCKS_TABLE);
 export const getProducts: ValidatedEventAPIGatewayProxyEvent<
   typeof schema
 > = async () => {
-  try {
-    const [products, stocks] = await Promise.all([
-      productService.getProducts(),
-      stockService.getStocks(),
-    ]);
-    productService.merge(products, stocks);
+  const [products, stocks] = await Promise.all([
+    productService.getProducts(),
+    stockService.getStocks(),
+  ]);
+  productService.merge(products, stocks);
 
-    return formatJSONResponse({
-      data: products,
-      message: `products`,
-    });
-  } catch (err) {
-    throw httpError(500, "Server error", { expose: true });
-  }
+  return formatJSONResponse({
+    data: products,
+    message: `products`,
+  });
 };
 
 export const main = middyfy(getProducts);

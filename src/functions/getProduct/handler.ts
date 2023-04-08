@@ -6,7 +6,7 @@ import {
   getDdbProductService,
   getDdbStockService,
 } from "../../libs/productService";
-import httpError from "http-errors";
+import { NotFound } from "http-errors";
 
 const PRODUCTS_TABLE = process.env.PRODUCTS_TABLE;
 const STOCKS_TABLE = process.env.STOCKS_TABLE;
@@ -17,23 +17,19 @@ const stockService = getDdbStockService(docClient, STOCKS_TABLE);
 export const getProduct: ValidatedEventAPIGatewayProxyEvent<undefined> = async (
   event
 ) => {
-  try {
-    const [product, stock] = await Promise.all([
-      productService.getProduct(event.pathParameters.id),
-      stockService.getStock(event.pathParameters.id),
-    ]);
+  const [product, stock] = await Promise.all([
+    productService.getProduct(event.pathParameters.id),
+    stockService.getStock(event.pathParameters.id),
+  ]);
 
-    if (product == null) {
-      throw httpError(404, "Product not found", { expose: true });
-    }
-
-    return formatJSONResponse({
-      data: { ...product, count: stock.count },
-      message: `product`,
-    });
-  } catch (err) {
-    throw httpError(500, "Server error", { expose: true });
+  if (product == null) {
+    throw NotFound("Product not found");
   }
+
+  return formatJSONResponse({
+    data: { ...product, count: stock.count },
+    message: `product`,
+  });
 };
 
 export const main = middyfy(getProduct);

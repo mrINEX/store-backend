@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-import httpError from "http-errors";
 import { ValidatedEventAPIGatewayProxyEvent } from "../../libs/api-gateway";
 import { formatJSONResponse } from "../../libs/api-gateway";
 import { docClient } from "../../libs/ddbClient";
@@ -19,22 +18,18 @@ const stockService = getDdbStockService(docClient, STOCKS_TABLE);
 export const createProduct: ValidatedEventAPIGatewayProxyEvent<
   typeof schema
 > = async (event) => {
-  try {
-    const { count, ...product } = event.body;
-    const uuid = uuidv4();
+  const { count, ...product } = event.body;
+  const uuid = uuidv4();
 
-    await Promise.all([
-      productService.putProduct({ ...product, id: uuid }),
-      stockService.putStock({ count, product_id: uuid }),
-    ]);
+  await Promise.all([
+    productService.putProduct({ ...product, id: uuid }),
+    stockService.putStock({ count, product_id: uuid }),
+  ]);
 
-    return formatJSONResponse({
-      data: product,
-      message: `product`,
-    });
-  } catch (err) {
-    throw httpError(500, "Server error", { expose: true });
-  }
+  return formatJSONResponse({
+    data: product,
+    message: `product`,
+  });
 };
 
 export const main = middyfy(createProduct);

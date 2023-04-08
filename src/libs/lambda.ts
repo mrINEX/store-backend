@@ -6,7 +6,9 @@ import httpErrorHandler from "@middy/http-error-handler";
 // import { Context } from "aws-lambda";
 
 export const middyfy = (handler) => {
-  return middy(handler).use(middyJsonBodyParser()).use(httpErrorHandler());
+  return middy(handler)
+    .use(middyJsonBodyParser())
+    .use(httpErrorHandler({ fallbackMessage: "Server error" }));
 };
 
 // if (schema !== undefined) {
