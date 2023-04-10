@@ -233,7 +233,7 @@ class DdbTransactProductService {
     const client_id =
       "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
     const res = await axios.get(
-      `https://api.unsplash.com/search/photos/?client_id=${client_id}&query=cat,${title}&per_page=1`
+      `https://api.unsplash.com/search/photos/?client_id=${client_id}&query=cats,${title}&per_page=1`
     );
 
     return res.data.results[0].urls.small;
