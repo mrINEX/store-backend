@@ -230,13 +230,15 @@ class DdbTransactProductService {
   }
 
   public async getImage(title: string) {
+    const defaultImage =
+      "https://images.unsplash.com/photo-1546190255-451a91afc548?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max";
     const client_id =
       "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
     const res = await axios.get(
-      `https://api.unsplash.com/search/photos/?client_id=${client_id}&query=cats,${title}&per_page=1`
+      `https://api.unsplash.com/search/collections/?client_id=${client_id}&query=cats,${title}&per_page=1`
     );
 
-    return res.data.results[0].urls.small;
+    return res?.data?.results[0]?.cover_photo?.urls?.small ?? defaultImage;
   }
 }
 
