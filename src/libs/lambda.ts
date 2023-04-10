@@ -1,13 +1,27 @@
 import middy from "@middy/core";
 import middyJsonBodyParser from "@middy/http-json-body-parser";
-import errorHandler from "@middy/http-error-handler";
+import httpErrorHandler from "@middy/http-error-handler";
 // import validator from "@middy/validator";
 // import { transpileSchema } from "@middy/validator/transpile";
 // import { Context } from "aws-lambda";
 
 export const middyfy = (handler) => {
-  return middy(handler).use(middyJsonBodyParser()).use(errorHandler());
+  return middy(handler)
+    .use(middyJsonBodyParser())
+    .use(logger())
+    .use(httpErrorHandler({ fallbackMessage: "Server error" }));
 };
+
+function logger(): middy.MiddlewareObj {
+  return {
+    before: (request) => {
+      console.log("Incoming event", JSON.stringify(request, null, 2));
+    },
+    after: (request) => {
+      console.log("Outgoing event", JSON.stringify(request, null, 2));
+    },
+  };
+}
 
 // if (schema !== undefined) {
 //   middyfiedHandler = middyfiedHandler.use(middyValidator(schema));

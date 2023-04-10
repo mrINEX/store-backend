@@ -1,0 +1,1 @@
+{"version":3,"file":"ddbClient.js","sourceRoot":"","sources":["../../../src/libs/ddbClient.ts"],"names":[],"mappings":";;;AAAA,4DAA0D;AAC1D,sEAAwD;AACxD,sDAA+D;AAC/D,yCAA8C;AAEjC,QAAA,SAAS,GAAG,IAAI,gCAAc,CAAC;IAC1C,MAAM,EAAE,kBAAM;IACd,WAAW,EAAE,IAAA,8BAAO,EAAC,EAAE,OAAO,EAAE,mBAAO,EAAE,CAAC;CAC3C,CAAC,CAAC;AAEU,QAAA,YAAY,GAAG,qCAAsB,CAAC,IAAI,CAAC,iBAAS,CAAC,CAAC"}

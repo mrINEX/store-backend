@@ -1,25 +1,33 @@
+import {
+  DynamoDBClient,
+  TransactWriteItemsCommand,
+} from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+  QueryCommand,
+} from "@aws-sdk/lib-dynamodb";
 import axios from "axios";
-// import { v4 as uuidv4 } from "uuid";
+import { marshall } from "@aws-sdk/util-dynamodb";
 
-// export const ProductSchema = Yup.object({
-//   id: Yup.string(),
-//   title: Yup.string().required().default(""),
-//   description: Yup.string().default(""),
-//   price: Yup.number().positive().required().defined().default(0),
-// });
-
-export type Product = {
+export interface Product extends Stock {
   id: string;
   title: string;
   description: string;
   price: number;
   image?: string;
-};
+}
+
+export interface Stock {
+  product_id: string;
+  count: number;
+}
 
 let productService: ProductService | undefined;
 
 /**
- * Singleton
+ * singleton
  */
 export function getProductService() {
   if (productService == null) {
@@ -28,9 +36,215 @@ export function getProductService() {
   return productService;
 }
 
-class ProductService {
-  private mock: Promise<Product[]>;
+/**
+ * product
+ */
+export function getDdbProductService(
+  client: DynamoDBDocumentClient,
+  table: string
+) {
+  return new DdbProductService(client, table);
+}
+
+/**
+ * stock
+ */
+export function getDdbStockService(
+  client: DynamoDBDocumentClient,
+  table: string
+) {
+  return new DdbStockService(client, table);
+}
+
+export function getDdbTransactProductService(
+  client: DynamoDBDocumentClient,
+  tableNames: {
+    stock: string;
+    product: string;
+  }
+) {
+  return new DdbTransactProductService(client, {
+    stock: tableNames.stock,
+    product: tableNames.product,
+  });
+}
+
+class DdbStockService {
+  constructor(private client: DynamoDBClient, private table: string) {}
+
+  public async getStock(id: string): Promise<Stock> {
+    const product = await this.client.send(
+      new GetCommand({
+        TableName: this.table,
+        Key: {
+          pk: this.table,
+          sk: id,
+        },
+      })
+    );
+    return product.Item as Stock;
+  }
+
+  public async getStocks(): Promise<Stock[]> {
+    const products = await this.client.send(
+      new QueryCommand({
+        TableName: this.table,
+        KeyConditionExpression: "pk = :pk",
+        ExpressionAttributeValues: { ":pk": this.table },
+      })
+    );
+
+    return products.Items as Stock[];
+  }
+
+  public async putStock(item: Stock) {
+    const params = {
+      TableName: this.table,
+      Item: {
+        pk: this.table,
+        sk: item.product_id,
+        ...item,
+      },
+    };
+
+    const data = await this.client.send(new PutCommand(params));
+    console.log("Success - stock added or updated", data);
+  }
+}
+
+class DdbProductService {
+  constructor(private client: DynamoDBClient, private table: string) {}
+
+  public merge(products: Product[], stocks: Stock[]) {
+    for (const product of products) {
+      const stock = stocks.find((stock) => stock.product_id === product.id);
+      product.count = stock.count;
+    }
+  }
+
+  public async getProduct(id: string): Promise<Product> {
+    const product = await this.client.send(
+      new GetCommand({
+        TableName: this.table,
+        Key: {
+          pk: this.table,
+          sk: id,
+        },
+      })
+    );
+    return product.Item as Product;
+  }
+
   public async getProducts(): Promise<Product[]> {
+    const products = await this.client.send(
+      new QueryCommand({
+        TableName: this.table,
+        KeyConditionExpression: "pk = :pk",
+        ExpressionAttributeValues: { ":pk": this.table },
+      })
+    );
+
+    return products.Items as Product[];
+  }
+
+  public async putProduct(item: Omit<Product, "count" | "product_id">) {
+    const image = await this.getImage(item.title);
+
+    const params = {
+      TableName: this.table,
+      Item: {
+        pk: this.table,
+        sk: item.id,
+        image,
+        ...item,
+      },
+    };
+    const data = await this.client.send(new PutCommand(params));
+    console.log("Success - product added or updated", data);
+  }
+
+  public async getImage(title: string) {
+    const client_id =
+      "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
+    const res = await axios.get(
+      `https://api.unsplash.com/search/photos/?client_id=${client_id}&query=${title}&per_page=1`
+    );
+
+    return res.data.results[0].urls.small;
+  }
+}
+
+type TransactItems = {
+  itemStock: Stock;
+  itemProduct: Omit<Product, "count" | "product_id">;
+};
+
+class DdbTransactProductService {
+  constructor(
+    private client: DynamoDBClient,
+    private tableNames: { stock: string; product: string }
+  ) {}
+
+  private createStockParams(item: Stock) {
+    return {
+      TableName: this.tableNames.stock,
+      Item: marshall({
+        pk: this.tableNames.stock,
+        sk: item.product_id,
+        ...item,
+      }),
+    };
+  }
+
+  private async createProductParams(
+    item: Omit<Product, "count" | "product_id">
+  ) {
+    const image = await this.getImage(item.title);
+
+    return {
+      TableName: this.tableNames.product,
+      Item: marshall({
+        pk: this.tableNames.product,
+        sk: item.id,
+        image,
+        ...item,
+      }),
+    };
+  }
+
+  async putTransact({ itemStock, itemProduct }: TransactItems) {
+    const stockParams = this.createStockParams(itemStock);
+    const productParams = await this.createProductParams(itemProduct);
+
+    const input = {
+      TransactItems: [{ Put: stockParams }, { Put: productParams }],
+    };
+
+    const command = new TransactWriteItemsCommand(input);
+    const response = await this.client.send(command);
+    console.log(
+      `Success - transact for ${this.tableNames.stock} and ${this.tableNames.product}`,
+      response
+    );
+    return response;
+  }
+
+  public async getImage(title: string) {
+    const defaultImage =
+      "https://images.unsplash.com/photo-1546190255-451a91afc548?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max";
+    const client_id =
+      "87e26779aa6242a2b2fc8e863886185d1d1f07215e4890071e45448baedf8950";
+    const res = await axios.get(
+      `https://api.unsplash.com/search/collections/?client_id=${client_id}&query=cats,${title}&per_page=1`
+    );
+
+    return res?.data?.results[0]?.cover_photo?.urls?.small ?? defaultImage;
+  }
+}
+
+class ProductService {
+  private mock: Promise<Omit<Product, "count" | "product_id">[]>;
+  public async getProducts(): Promise<Omit<Product, "count" | "product_id">[]> {
     if (this.mock == null) {
       this.mock = Promise.all(
         [
@@ -71,7 +285,7 @@ class ProductService {
     return this.mock;
   }
 
-  private getRandomInt(min, max) {
+  public getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive

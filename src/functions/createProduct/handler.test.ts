@@ -1,6 +1,6 @@
 import { ValidatedAPIGatewayProxyEvent } from "../../libs/api-gateway";
 import { Callback, Context } from "aws-lambda";
-import { getProducts } from "./handler";
+import { createProduct } from "./handler";
 import schema from "./schema";
 
 const mock = {
@@ -38,7 +38,7 @@ describe("getProduct", () => {
       image: "http//sd",
     };
 
-    const response = await getProducts(event, context, callback);
+    const response = await createProduct(event, context, callback);
     expect(response).toMatchObject({
       ...mock.success,
       body: JSON.stringify({ data: [mock.product], message: "products" }),

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
     "lib": [
       "ESNext"
     ],
@@ -9,8 +8,10 @@
     "noUnusedParameters": true,
     "removeComments": true,
     "sourceMap": true,
-    "target": "ES2020",
-    "outDir": "lib"
+    "esModuleInterop": true,
+    // "target": "ES2020",
+    "outDir": "lib",
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts",
@@ -24,8 +25,9 @@
     ".vscode/**/*"
   ],
   "ts-node": {
-    "require": [
-      "tsconfig-paths/register"
-    ]
+    "swc": true,
+    // "require": [
+    //   "tsconfig-paths/register"
+    // ]
   }
 }

@@ -1,4 +1,5 @@
 import type { AWS } from "@serverless/typescript";
+import schema from "./schema";
 import { handlerPath } from "../../libs/handler-resolver";
 
 export default <AWS["functions"]>{
@@ -10,19 +11,20 @@ export default <AWS["functions"]>{
   events: [
     {
       http: {
-        method: "get",
-        path: "products/{id}",
+        method: "post",
+        path: "products",
         cors: true,
         responses: {
           200: {
             description: "product",
-            bodyType: "ProductResponse",
-          },
-          404: {
-            description: "product not found",
-            bodyType: "NotFound",
+            bodyType: "ProductsResponse",
           },
           502: "server error",
+        },
+        request: {
+          schemas: {
+            "application/json": schema,
+          },
         },
       },
     },
