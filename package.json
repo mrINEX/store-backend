@@ -16,14 +16,17 @@
     "ddb:create:ts-node": "npx ts-node ./src/libs/ddbCreate.ts",
     "ddb:create": "node ./lib/src/libs/ddbCreate.js",
     "ddb:fill": "node ./lib/src/libs/ddbFill.js",
+    "s3:create": "node ./lib/src/libs/importService.js",
     "tsc:run:ddb:create": "npm run tsc && npm run ddb:create",
-    "tsc:run:ddb:fill": "npm run tsc && npm run ddb:fill"
+    "tsc:run:ddb:fill": "npm run tsc && npm run ddb:fill",
+    "tsc:run:s3:create": "npm run tsc && npm run s3:create"
   },
   "engines": {
     "node": ">=18.14.0"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.306.0",
+    "@aws-sdk/client-s3": "^3.310.0",
     "@aws-sdk/credential-providers": "^3.306.0",
     "@aws-sdk/lib-dynamodb": "^3.306.0",
     "@middy/core": "^3.4.0",
