@@ -7,7 +7,18 @@ import { s3Client } from "./ddbClient";
 
 const bucket = "integration-with-s3";
 
-const run = async () => {
+async function run() {
+  console.log("operations", process.argv[2]);
+
+  switch (process.argv[2]) {
+    case "--create":
+      return await create();
+    default:
+      console.log(`${process.argv[2]} does not support`);
+  }
+}
+
+const create = async () => {
   const command = new ListBucketsCommand({});
   const { Buckets } = await s3Client.send(command);
 
@@ -38,4 +49,5 @@ const run = async () => {
     console.log("Error", err);
   }
 };
+
 run();
