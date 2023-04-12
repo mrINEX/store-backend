@@ -18,5 +18,9 @@ export const client = new DynamoDBClient({
   region: REGION,
 });
 
+export const clientS3WithoutCredentials = new S3Client({
+  region: REGION,
+});
+
 export const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
 export const docClient = DynamoDBDocumentClient.from(client);

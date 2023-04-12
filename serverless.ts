@@ -3,6 +3,7 @@ import type { AWS } from "@serverless/typescript";
 import getProducts from "./src/functions/getProducts";
 import getProduct from "./src/functions/getProduct";
 import createProduct from "./src/functions/createProduct";
+import importProductsFile from "./src/functions/importProductsFile";
 
 const serverlessConfiguration: AWS = {
   service: "store-backend",
@@ -29,10 +30,11 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
       PRODUCTS_TABLE: "products",
       STOCKS_TABLE: "stocks",
+      BUCKET_NAME: "integration-with-s3",
     },
   },
   // import the function via paths
-  functions: { getProducts, getProduct, createProduct },
+  functions: { getProducts, getProduct, createProduct, importProductsFile },
   package: { individually: true },
   custom: {
     esbuild: {

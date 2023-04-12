@@ -29,6 +29,7 @@
     "@aws-sdk/client-s3": "^3.310.0",
     "@aws-sdk/credential-providers": "^3.306.0",
     "@aws-sdk/lib-dynamodb": "^3.306.0",
+    "@aws-sdk/s3-request-presigner": "^3.312.0",
     "@middy/core": "^3.4.0",
     "@middy/http-error-handler": "^4.2.8",
     "@middy/http-json-body-parser": "^3.4.0",

@@ -91,6 +91,28 @@
           }
         }
       }
+    },
+    "/import": {
+      "get": {
+        "summary": "importProductsFile",
+        "description": "",
+        "operationId": "importProductsFile.get.import",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "file"
+          },
+          "502": {
+            "description": "Server error"
+          }
+        }
+      }
     }
   },
   "definitions": {
