@@ -18,13 +18,22 @@ const serverlessConfiguration: AWS = {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
-    iamRoleStatements: [
-      {
-        Effect: "Allow",
-        Action: ["dynamodb:Query", "dynamodb:GetItem", "dynamodb:PutItem"],
-        Resource: "arn:aws:dynamodb:*",
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: "Allow",
+            Action: ["dynamodb:Query", "dynamodb:GetItem", "dynamodb:PutItem"],
+            Resource: "arn:aws:dynamodb:*",
+          },
+          {
+            Effect: "Allow",
+            Action: ["s3:GetObject", "s3:PutObject"],
+            Resource: "arn:aws:s3:::*",
+          },
+        ],
       },
-    ],
+    },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",

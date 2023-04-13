@@ -1,6 +1,8 @@
 import {
   CreateBucketCommand,
+  GetObjectCommand,
   ListBucketsCommand,
+  PutBucketCorsCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
@@ -14,7 +16,6 @@ async function run() {
   switch (process.argv[2]) {
     case "--create":
       await create();
-      await generateSignedUrl("name.png");
       return;
     default:
       console.log(`${process.argv[2]} does not support`);
@@ -23,8 +24,7 @@ async function run() {
 
 const create = async () => {
   try {
-    const command = new ListBucketsCommand({});
-    const { Buckets } = await s3Client.send(command);
+    const { Buckets } = await s3Client.send(new ListBucketsCommand({}));
 
     for (const Bucket of Buckets) {
       if (Bucket.Name === bucket) {
@@ -38,6 +38,22 @@ const create = async () => {
     );
     console.log(`Bucket '${bucket}' successfully created`);
 
+    const input = {
+      Bucket: bucket,
+      CORSConfiguration: {
+        CORSRules: [
+          {
+            AllowedMethods: ["PUT", "POST", "GET"],
+            AllowedOrigins: ["*"],
+            AllowedHeaders: ["*"],
+          },
+        ],
+      },
+    };
+    const command = new PutBucketCorsCommand(input);
+    await s3Client.send(command);
+    console.log(`Bucket '${bucket}' successfully set CORS`);
+
     await s3Client.send(
       new PutObjectCommand({
         Bucket: bucket,
@@ -50,15 +66,33 @@ const create = async () => {
   }
 };
 
-export async function generateSignedUrl(fileName: string, client?: S3Client) {
-  const command = new PutObjectCommand({
+export async function generatePutSignedUrl(fileName = "", client?: S3Client) {
+  const config = {
     Bucket: bucket,
     Key: `${key}${fileName}`,
-  });
+  };
+  console.log("Config to generate PUT url", JSON.stringify(config, null, 2));
+
+  const command = new PutObjectCommand(config);
   const url = await getSignedUrl(client ?? s3Client, command, {
     expiresIn: 3 * 60,
   });
-  console.log("Presigned URL: ", url);
+  console.log("Presigned PUT URL: ", url);
+  return url;
+}
+
+export async function generateGetSignedUrl(fileName = "", client?: S3Client) {
+  const config = {
+    Bucket: bucket,
+    Key: `${key}${fileName}`,
+  };
+  console.log("Config to generate GET url", JSON.stringify(config, null, 2));
+
+  const command = new GetObjectCommand(config);
+  const url = await getSignedUrl(client ?? s3Client, command, {
+    expiresIn: 3 * 60,
+  });
+  console.log("Presigned GET URL: ", url);
   return url;
 }
 
