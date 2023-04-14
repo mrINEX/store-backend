@@ -15,6 +15,7 @@ export default <AWS["functions"]>{
         responses: {
           200: {
             description: "file",
+            bodyType: "SignedUrl",
           },
           502: "Server error",
         },
