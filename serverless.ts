@@ -4,6 +4,7 @@ import getProducts from "./src/functions/getProducts";
 import getProduct from "./src/functions/getProduct";
 import createProduct from "./src/functions/createProduct";
 import importProductsFile from "./src/functions/importProductsFile";
+import importFileParser from "./src/functions/importFileParser";
 
 const serverlessConfiguration: AWS = {
   service: "store-backend",
@@ -43,7 +44,13 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { getProducts, getProduct, createProduct, importProductsFile },
+  functions: {
+    getProducts,
+    getProduct,
+    createProduct,
+    importProductsFile,
+    importFileParser,
+  },
   package: { individually: true },
   custom: {
     esbuild: {

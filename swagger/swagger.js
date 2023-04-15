@@ -106,7 +106,10 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "file"
+            "description": "file",
+            "schema": {
+              "$ref": "#/definitions/SignedUrl"
+            }
           },
           "502": {
             "description": "Server error"
@@ -199,6 +202,38 @@
       ],
       "additionalProperties": false,
       "title": "ProductsResponse",
+      "type": "object"
+    },
+    "SignedUrl": {
+      "properties": {
+        "data": {
+          "properties": {
+            "signedUrl": {
+              "title": "SignedUrl.data.signedUrl",
+              "type": "string"
+            }
+          },
+          "required": [
+            "signedUrl"
+          ],
+          "additionalProperties": false,
+          "title": "SignedUrl.data",
+          "type": "object"
+        },
+        "message": {
+          "title": "SignedUrl.message",
+          "enum": [
+            "signed url"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "data",
+        "message"
+      ],
+      "additionalProperties": false,
+      "title": "SignedUrl",
       "type": "object"
     },
     "NotFound": {

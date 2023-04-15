@@ -9,8 +9,8 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3Client } from "./ddbClient";
 
-const bucket = "integration-with-s3";
-const key = "uploaded/";
+export const bucket = "integration-with-s3";
+export const key = "uploaded/";
 
 async function run() {
   switch (process.argv[2]) {
