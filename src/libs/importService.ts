@@ -10,6 +10,11 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3Client } from "./ddbClient";
+import { createReadStream } from "fs";
+const { pipeline } = require("node:stream/promises");
+import csv from "csv-parser";
+import path from "path";
+import { Writable } from "stream";
 
 export const bucket = "integration-with-s3";
 export const key = "uploaded/";
@@ -19,6 +24,26 @@ async function run() {
   switch (process.argv[2]) {
     case "--create":
       await create();
+      return;
+    case "--copy":
+      await copy();
+      return;
+    case "--test":
+      await (async function name() {
+        await pipeline(
+          createReadStream(
+            path.join(process.cwd(), "src/functions/importFileParser/test.csv")
+          ),
+          csv({ separator: ";" }),
+          new Writable({
+            objectMode: true,
+            write(chunk, _encoding, callback) {
+              console.log("parsed product", chunk);
+              callback();
+            },
+          })
+        );
+      })();
       return;
     default:
       console.log(`${process.argv[2]} does not support`);
@@ -69,6 +94,15 @@ const create = async () => {
   }
 };
 
+const copy = async () => {
+  await copyObject(s3Client, {
+    source: `${bucket}/${key}test.csv`,
+    bucket: bucket,
+    key: `${parsedKey}${Date.now()}.csv`,
+  });
+  console.log("finish event copied");
+};
+
 export async function getObject(
   client: S3Client,
   input: { bucket: string; key: string }
@@ -91,7 +125,7 @@ export async function deleteObject(
   return client.send(new DeleteObjectCommand(config));
 }
 
-export async function CopyObject(
+export async function copyObject(
   client: S3Client,
   input: { source: string; bucket: string; key: string }
 ) {

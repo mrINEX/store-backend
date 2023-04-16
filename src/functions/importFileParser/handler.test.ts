@@ -1,5 +1,4 @@
-import { ValidatedAPIGatewayProxyEvent } from "../../libs/api-gateway";
-import { Callback, Context } from "aws-lambda";
+import { Callback, Context, S3Event } from "aws-lambda";
 import { importFileParser } from "./handler";
 
 const mock = {
@@ -29,9 +28,7 @@ jest.mock("../../libs/productService", () => {
 
 describe("getProduct", () => {
   test("should return product by id", async () => {
-    const event = {
-      pathParameters: { id: "1" },
-    } as unknown as ValidatedAPIGatewayProxyEvent<undefined>;
+    const event = {} as S3Event;
     const context = <Context>{};
     const callback: Callback = () => {};
 
