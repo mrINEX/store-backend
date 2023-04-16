@@ -1,5 +1,7 @@
 import {
+  CopyObjectCommand,
   CreateBucketCommand,
+  DeleteObjectCommand,
   GetObjectCommand,
   ListBucketsCommand,
   PutBucketCorsCommand,
@@ -11,6 +13,7 @@ import { s3Client } from "./ddbClient";
 
 export const bucket = "integration-with-s3";
 export const key = "uploaded/";
+export const parsedKey = "parsed/";
 
 async function run() {
   switch (process.argv[2]) {
@@ -65,6 +68,40 @@ const create = async () => {
     console.log("Error", err);
   }
 };
+
+export async function getObject(
+  client: S3Client,
+  input: { bucket: string; key: string }
+) {
+  const config = {
+    Bucket: input.bucket,
+    Key: input.key,
+  };
+  return client.send(new GetObjectCommand(config));
+}
+
+export async function deleteObject(
+  client: S3Client,
+  input: { bucket: string; key: string }
+) {
+  const config = {
+    Bucket: input.bucket,
+    Key: input.key,
+  };
+  return client.send(new DeleteObjectCommand(config));
+}
+
+export async function CopyObject(
+  client: S3Client,
+  input: { source: string; bucket: string; key: string }
+) {
+  const config = {
+    CopySource: input.source,
+    Bucket: input.bucket,
+    Key: input.key,
+  };
+  return client.send(new CopyObjectCommand(config));
+}
 
 export async function generatePutSignedUrl(fileName = "", client?: S3Client) {
   const config = {

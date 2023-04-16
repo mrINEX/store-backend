@@ -29,7 +29,12 @@ const serverlessConfiguration: AWS = {
           },
           {
             Effect: "Allow",
-            Action: ["s3:GetObject", "s3:PutObject"],
+            Action: [
+              "s3:GetObject",
+              "s3:PutObject",
+              "s3:DeleteObject",
+              "s3:CopyObject",
+            ],
             Resource: "arn:aws:s3:::*",
           },
         ],
