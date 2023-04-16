@@ -4,7 +4,6 @@ import {
   copyObject,
   deleteObject,
   getObject,
-  key,
   parsedKey,
 } from "../../libs/importService";
 import { clientS3WithoutCredentials as client } from "../../libs/ddbClient";
@@ -35,13 +34,11 @@ export const importFileParser: S3Handler = async (event) => {
     bucket: s3.bucket.name,
     key: `${parsedKey}${Date.now()}.csv`,
   });
-  console.log(`copied from ${key} to ${parsedKey}`);
 
   await deleteObject(client, {
     bucket: s3.bucket.name,
     key: s3.object.key,
   });
-  console.log("deleted from", s3.bucket.name, s3.object.key);
 };
 
 export const main = middyfy(importFileParser, false);

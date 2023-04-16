@@ -122,7 +122,9 @@ export async function deleteObject(
     Bucket: input.bucket,
     Key: input.key,
   };
-  return client.send(new DeleteObjectCommand(config));
+  const result = await client.send(new DeleteObjectCommand(config));
+  console.log("deleted from", input.bucket, input.key);
+  return result;
 }
 
 export async function copyObject(
@@ -134,7 +136,9 @@ export async function copyObject(
     Bucket: input.bucket,
     Key: input.key,
   };
-  return client.send(new CopyObjectCommand(config));
+  const result = await client.send(new CopyObjectCommand(config));
+  console.log(`copied from ${key} to ${input.key}`);
+  return result;
 }
 
 export async function generatePutSignedUrl(fileName = "", client?: S3Client) {
