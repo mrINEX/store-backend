@@ -44,6 +44,7 @@ async function run() {
           })
         );
       })();
+      console.log("pipeline finished");
       return;
     default:
       console.log(`${process.argv[2]} does not support`);
