@@ -33,7 +33,7 @@ export const createProduct: ValidatedEventAPIGatewayProxyEvent<
 
   return formatJSONResponse({
     data: result,
-    message: `product`,
+    message: `products`,
   });
 };
 

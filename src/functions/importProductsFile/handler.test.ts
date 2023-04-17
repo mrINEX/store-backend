@@ -10,27 +10,19 @@ const mock = {
     },
     statusCode: 200,
   },
-  product: {
-    id: "1",
-    title: "rew",
-    description: "jet",
-    price: 33,
-    image: "http//sd",
-  },
+  output: { signedUrl: "https://" },
 };
 
-jest.mock("../../libs/productService", () => {
+jest.mock("../../libs/importService", () => {
   return {
-    getProductService: () => ({
-      getProducts: () => [mock.product],
-    }),
+    generatePutSignedUrl: () => Promise.resolve(mock.output.signedUrl),
   };
 });
 
-describe("getProduct", () => {
-  test("should return product by id", async () => {
+describe("importProductsFile", () => {
+  test("should return signed url", async () => {
     const event = {
-      pathParameters: { id: "1" },
+      queryStringParameters: { name: "fileName" },
     } as unknown as ValidatedAPIGatewayProxyEvent<undefined>;
     const context = <Context>{};
     const callback: Callback = () => {};
@@ -38,7 +30,7 @@ describe("getProduct", () => {
     const response = await importProductsFile(event, context, callback);
     expect(response).toMatchObject({
       ...mock.success,
-      body: JSON.stringify({ data: mock.product, message: "product" }),
+      body: JSON.stringify({ data: mock.output, message: "signed url" }),
     });
   });
 });

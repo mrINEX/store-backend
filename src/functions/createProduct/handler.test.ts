@@ -16,8 +16,8 @@ const mock = {
 
 jest.mock("../../libs/productService", () => {
   return {
-    getProductService: () => ({
-      getProducts: () => [mock.product],
+    getDdbTransactProductService: () => ({
+      putTransact: () => [],
     }),
   };
 });
@@ -41,7 +41,7 @@ describe("getProduct", () => {
     const response = await createProduct(event, context, callback);
     expect(response).toMatchObject({
       ...mock.success,
-      body: JSON.stringify({ data: [mock.product], message: "products" }),
+      body: JSON.stringify({ data: [], message: "products" }),
     });
   });
 });
