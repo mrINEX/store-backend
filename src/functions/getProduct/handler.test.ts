@@ -22,8 +22,12 @@ const mock = {
 
 jest.mock("../../libs/productService", () => {
   return {
-    getProductService: () => ({
-      getProducts: () => [mock.product],
+    getDdbProductService: () => ({
+      getProduct: () => mock.product,
+      merge: () => {},
+    }),
+    getDdbStockService: () => ({
+      getStock: () => [{}],
     }),
   };
 });
@@ -49,6 +53,8 @@ describe("getProduct", () => {
     } as unknown as ValidatedAPIGatewayProxyEvent<undefined>;
     const context = <Context>{};
     const callback: Callback = () => {};
+
+    mock.product = null;
 
     await expect(getProduct(event, context, callback)).rejects.toThrowError(
       NotFound

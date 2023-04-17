@@ -1,5 +1,7 @@
 import { Callback, Context, S3Event } from "aws-lambda";
 import { importFileParser } from "./handler";
+import { createReadStream } from "fs";
+import path from "path";
 
 const mock = {
   success: {
@@ -9,33 +11,29 @@ const mock = {
     },
     statusCode: 200,
   },
-  product: {
-    id: "1",
-    title: "rew",
-    description: "jet",
-    price: 33,
-    image: "http//sd",
-  },
 };
 
-jest.mock("../../libs/productService", () => {
+jest.mock("../../libs/importService", () => {
   return {
-    getProductService: () => ({
-      getProducts: () => [mock.product],
-    }),
+    copyObject: jest.fn().mockResolvedValue({}),
+    deleteObject: jest.fn().mockResolvedValue({}),
+    getObject: () =>
+      Promise.resolve({
+        Body: createReadStream(path.join(__dirname, "./test.csv")),
+      }),
+    parsedKey: "parsed/",
   };
 });
 
-describe("getProduct", () => {
+describe("importFileParser", () => {
   test("should return product by id", async () => {
-    const event = {} as S3Event;
+    const event = {
+      Records: [{ s3: { bucket: { name: "name" }, object: { key: "key" } } }],
+    } as S3Event;
     const context = <Context>{};
     const callback: Callback = () => {};
 
     const response = await importFileParser(event, context, callback);
-    expect(response).toMatchObject({
-      ...mock.success,
-      body: JSON.stringify({ data: mock.product, message: "product" }),
-    });
+    expect(response).toBeUndefined();
   });
 });

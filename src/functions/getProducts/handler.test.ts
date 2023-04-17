@@ -16,8 +16,12 @@ const mock = {
 
 jest.mock("../../libs/productService", () => {
   return {
-    getProductService: () => ({
+    getDdbProductService: () => ({
       getProducts: () => [mock.product],
+      merge: () => {},
+    }),
+    getDdbStockService: () => ({
+      getStocks: () => [{}],
     }),
   };
 });

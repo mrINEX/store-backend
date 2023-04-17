@@ -24,7 +24,7 @@ jest.mock("../../libs/productService", () => {
 
 describe("getProduct", () => {
   test("should return product by id", async () => {
-    const event = { body: null } as unknown as ValidatedAPIGatewayProxyEvent<
+    const event = { body: { count: 4 } } as ValidatedAPIGatewayProxyEvent<
       typeof schema
     >;
     const context = <Context>{};
