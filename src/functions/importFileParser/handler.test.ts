@@ -3,16 +3,6 @@ import { importFileParser } from "./handler";
 import { createReadStream } from "fs";
 import path from "path";
 
-const mock = {
-  success: {
-    headers: {
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": "*",
-    },
-    statusCode: 200,
-  },
-};
-
 jest.mock("../../libs/importService", () => {
   return {
     copyObject: jest.fn().mockResolvedValue({}),
