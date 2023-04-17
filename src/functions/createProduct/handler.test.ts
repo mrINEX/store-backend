@@ -16,15 +16,15 @@ const mock = {
 
 jest.mock("../../libs/productService", () => {
   return {
-    getProductService: () => ({
-      getProducts: () => [mock.product],
+    getDdbTransactProductService: () => ({
+      putTransact: () => [],
     }),
   };
 });
 
 describe("getProduct", () => {
   test("should return product by id", async () => {
-    const event = { body: null } as unknown as ValidatedAPIGatewayProxyEvent<
+    const event = { body: { count: 4 } } as ValidatedAPIGatewayProxyEvent<
       typeof schema
     >;
     const context = <Context>{};
@@ -41,7 +41,7 @@ describe("getProduct", () => {
     const response = await createProduct(event, context, callback);
     expect(response).toMatchObject({
       ...mock.success,
-      body: JSON.stringify({ data: [mock.product], message: "products" }),
+      body: JSON.stringify({ data: [], message: "products" }),
     });
   });
 });

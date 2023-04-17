@@ -5,9 +5,22 @@ import httpErrorHandler from "@middy/http-error-handler";
 // import { transpileSchema } from "@middy/validator/transpile";
 // import { Context } from "aws-lambda";
 
-export const middyfy = (handler) => {
+process.on("uncaughtException", (...errs) =>
+  console.log("-- uncaughtException --", errs)
+);
+process.on("unhandledRejection", (...errs) =>
+  console.log("-- unhandledRejection --", errs)
+);
+
+export const middyfy = (handler, http = true) => {
+  if (http) {
+    return middy(handler)
+      .use(middyJsonBodyParser())
+      .use(logger())
+      .use(httpErrorHandler({ fallbackMessage: "Server error" }));
+  }
+
   return middy(handler)
-    .use(middyJsonBodyParser())
     .use(logger())
     .use(httpErrorHandler({ fallbackMessage: "Server error" }));
 };

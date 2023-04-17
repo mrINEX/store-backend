@@ -18,4 +18,9 @@ export type ProductsResponse = {
   message: "products";
 };
 
+export type SignedUrl = {
+  data: { signedUrl: string };
+  message: "signed url";
+};
+
 export type NotFound = { message: "Not Found" };
