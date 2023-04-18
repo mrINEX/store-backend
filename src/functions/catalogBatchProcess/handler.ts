@@ -16,4 +16,4 @@ export const catalogBatchProcess: ValidatedEventAPIGatewayProxyEvent<
   });
 };
 
-export const main = middyfy(catalogBatchProcess);
+export const main = middyfy(catalogBatchProcess, false);

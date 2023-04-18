@@ -5,8 +5,12 @@ import {
   deleteObject,
   getObject,
   parsedKey,
+  send,
 } from "../../libs/importService";
-import { clientS3WithoutCredentials as client } from "../../libs/ddbClient";
+import {
+  clientS3WithoutCredentials as client,
+  clientSQSWithoutCredentials as sqsClient,
+} from "../../libs/ddbClient";
 import csv from "csv-parser";
 import { Writable } from "stream";
 
@@ -24,6 +28,7 @@ export const importFileParser: S3Handler = async (event) => {
       objectMode: true,
       write(chunk, _encoding, callback) {
         console.log("parsed product", chunk);
+        send(sqsClient, JSON.stringify(chunk));
         callback();
       },
     })

@@ -8,6 +8,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3Client } from "./ddbClient";
 import { createReadStream } from "fs";
@@ -173,3 +174,13 @@ export async function generateGetSignedUrl(fileName = "", client?: S3Client) {
 }
 
 run();
+
+export async function send(client: SQSClient, message: string) {
+  const params = {
+    QueueUrl: process.env.SQS,
+    MessageBody: message,
+  };
+  const data = await client.send(new SendMessageCommand(params));
+  console.log("Success, message sent. MessageID:", data.MessageId);
+  return data;
+}
