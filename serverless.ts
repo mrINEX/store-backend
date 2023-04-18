@@ -5,6 +5,7 @@ import getProduct from "./src/functions/getProduct";
 import createProduct from "./src/functions/createProduct";
 import importProductsFile from "./src/functions/importProductsFile";
 import importFileParser from "./src/functions/importFileParser";
+import catalogBatchProcess from "./src/functions/catalogBatchProcess";
 
 const serverlessConfiguration: AWS = {
   service: "store-backend",
@@ -41,6 +42,17 @@ const serverlessConfiguration: AWS = {
       PRODUCTS_TABLE: "products",
       STOCKS_TABLE: "stocks",
       BUCKET_NAME: "integration-with-s3",
+      SQS: { Ref: "catalogItemsQueue" },
+    },
+  },
+  resources: {
+    Resources: {
+      catalogItemsQueue: {
+        Type: "AWS::SQS::Queue",
+        Properties: {
+          QueueName: "catalogItemsQueue",
+        },
+      },
     },
   },
   // import the function via paths
@@ -50,6 +62,7 @@ const serverlessConfiguration: AWS = {
     createProduct,
     importProductsFile,
     importFileParser,
+    catalogBatchProcess,
   },
   package: { individually: true },
   custom: {
