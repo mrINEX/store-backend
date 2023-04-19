@@ -27,7 +27,6 @@ export const importFileParser: S3Handler = async (event) => {
     new Writable({
       objectMode: true,
       write(chunk, _encoding, callback) {
-        console.log("parsed product", chunk);
         send(sqsClient, JSON.stringify(chunk));
         callback();
       },
