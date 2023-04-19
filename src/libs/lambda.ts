@@ -36,10 +36,6 @@ function logger(): middy.MiddlewareObj {
   };
 }
 
-// if (schema !== undefined) {
-//   middyfiedHandler = middyfiedHandler.use(middyValidator(schema));
-// }
-
 // export const middyValidator = (
 //   schema: object
 // ): middy.MiddlewareObj<unknown, unknown, Error, Context> => {
