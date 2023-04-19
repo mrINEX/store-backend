@@ -38,6 +38,11 @@ const serverlessConfiguration: AWS = {
             Action: ["sqs:SendMessage"],
             Resource: "arn:aws:sqs:*",
           },
+          {
+            Effect: "Allow",
+            Action: ["sns:Publish"],
+            Resource: { Ref: "createProductTopic" },
+          },
         ],
       },
     },
@@ -48,6 +53,7 @@ const serverlessConfiguration: AWS = {
       STOCKS_TABLE: "stocks",
       BUCKET_NAME: "integration-with-s3",
       SQS: { Ref: "catalogItemsQueue" },
+      SNS: { Ref: "createProductTopic" },
     },
   },
   resources: {
@@ -56,6 +62,20 @@ const serverlessConfiguration: AWS = {
         Type: "AWS::SQS::Queue",
         Properties: {
           QueueName: "catalogItemsQueue",
+        },
+      },
+      createProductTopic: {
+        Type: "AWS::SNS::Topic",
+        Properties: {
+          TopicName: "createProductTopic",
+        },
+      },
+      SNSSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Endpoint: "uladzimir_kazak@epam.com",
+          Protocol: "email",
+          TopicArn: { Ref: "createProductTopic" },
         },
       },
     },

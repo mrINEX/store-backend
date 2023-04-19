@@ -3,6 +3,7 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { fromIni } from "@aws-sdk/credential-providers";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { SQSClient } from "@aws-sdk/client-sqs";
+import { SNSClient } from "@aws-sdk/client-sns";
 import { REGION, PROFILE } from "./constants";
 
 export const ddbClient = new DynamoDBClient({
@@ -24,6 +25,10 @@ export const clientS3WithoutCredentials = new S3Client({
 });
 
 export const clientSQSWithoutCredentials = new SQSClient({
+  region: REGION,
+});
+
+export const clientSNSWithoutCredentials = new SNSClient({
   region: REGION,
 });
 
