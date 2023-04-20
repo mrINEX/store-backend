@@ -31,10 +31,15 @@ export const catalogBatchProcess: SQSHandler = async (event: SQSEvent) => {
   const { Records } = event;
 
   const batch = Records.map((record) => {
-    const validProductString = eventSchema(record.body);
     const result = JSON.parse(record.body);
     const validProduct = eventSchema(result);
-    console.log({ product: result, validProduct, validProductString });
+
+    console.log({
+      product: result,
+      validProduct: `[is valid ${validProduct}] - ${eventSchema.errors
+        .map(({ message }) => message)
+        .join(" | ")}`,
+    });
 
     const { count, ...product } = result;
     const uuid = uuidv4();
@@ -49,12 +54,16 @@ export const catalogBatchProcess: SQSHandler = async (event: SQSEvent) => {
 
   await publish(
     snsClient,
-    `Products was saved. Length - ${batch.length}. Items - ${JSON.stringify(
-      batch.map(({ itemProduct, itemStock }) => ({
-        ...itemProduct,
-        ...itemStock,
-      }))
-    )}`
+    `Products was saved. Length - ${batch.length}. Items - ${
+      (JSON.stringify(
+        batch.map(({ itemProduct, itemStock }) => ({
+          ...itemProduct,
+          ...itemStock,
+        }))
+      ),
+      null,
+      2)
+    }`
   );
 };
 
