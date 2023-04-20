@@ -78,6 +78,18 @@ const serverlessConfiguration: AWS = {
           TopicArn: { Ref: "createProductTopic" },
         },
       },
+      AdditionalSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          FilterPolicy: {
+            filterPolicyScope: ["MessageBody"],
+            filterPolicy: ["title"],
+          },
+          Endpoint: "mrinex@mail.ru",
+          Protocol: "email",
+          TopicArn: { Ref: "createProductTopic" },
+        },
+      },
     },
   },
   // import the function via paths
