@@ -187,6 +187,7 @@ export async function send(client: SQSClient, message: string) {
 }
 
 export async function publish(client: SNSClient, message: string) {
+  console.log("publish message string", message);
   var params = {
     Message: message,
     TopicArn: process.env.SNS,

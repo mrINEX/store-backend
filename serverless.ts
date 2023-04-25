@@ -81,10 +81,8 @@ const serverlessConfiguration: AWS = {
       AdditionalSubscription: {
         Type: "AWS::SNS::Subscription",
         Properties: {
-          FilterPolicy: {
-            filterPolicyScope: ["MessageBody"],
-            filterPolicy: ["title"],
-          },
+          FilterPolicy: { price: [{ numeric: [">", 50] }] },
+          FilterPolicyScope: "MessageBody",
           Endpoint: "mrinex@mail.ru",
           Protocol: "email",
           TopicArn: { Ref: "createProductTopic" },

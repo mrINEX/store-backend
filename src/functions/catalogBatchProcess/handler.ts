@@ -52,18 +52,21 @@ export const catalogBatchProcess: SQSHandler = async (event: SQSEvent) => {
 
   await transactService.putBatchTransact(batch);
 
-  await publish(
-    snsClient,
-    `Products was saved. Length - ${batch.length}. Items - ${
-      (JSON.stringify(
-        batch.map(({ itemProduct, itemStock }) => ({
-          ...itemProduct,
-          ...itemStock,
-        }))
-      ),
-      null,
-      2)
-    }`
+  await Promise.all(
+    batch.map(({ itemProduct, itemStock }) => {
+      return publish(
+        snsClient,
+        JSON.stringify(
+          {
+            ...itemProduct,
+            ...itemStock,
+            price: +itemProduct.price,
+          },
+          null,
+          2
+        )
+      );
+    })
   );
 };
 
