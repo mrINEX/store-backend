@@ -5,6 +5,7 @@ import getProduct from "./src/functions/getProduct";
 import createProduct from "./src/functions/createProduct";
 import importProductsFile from "./src/functions/importProductsFile";
 import importFileParser from "./src/functions/importFileParser";
+import catalogBatchProcess from "./src/functions/catalogBatchProcess";
 
 const serverlessConfiguration: AWS = {
   service: "store-backend",
@@ -32,6 +33,16 @@ const serverlessConfiguration: AWS = {
             Action: ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
             Resource: "arn:aws:s3:::*",
           },
+          {
+            Effect: "Allow",
+            Action: ["sqs:SendMessage"],
+            Resource: "arn:aws:sqs:*",
+          },
+          {
+            Effect: "Allow",
+            Action: ["sns:Publish"],
+            Resource: { Ref: "createProductTopic" },
+          },
         ],
       },
     },
@@ -41,6 +52,42 @@ const serverlessConfiguration: AWS = {
       PRODUCTS_TABLE: "products",
       STOCKS_TABLE: "stocks",
       BUCKET_NAME: "integration-with-s3",
+      SQS: { Ref: "catalogItemsQueue" },
+      SNS: { Ref: "createProductTopic" },
+    },
+  },
+  resources: {
+    Resources: {
+      catalogItemsQueue: {
+        Type: "AWS::SQS::Queue",
+        Properties: {
+          QueueName: "catalogItemsQueue",
+        },
+      },
+      createProductTopic: {
+        Type: "AWS::SNS::Topic",
+        Properties: {
+          TopicName: "createProductTopic",
+        },
+      },
+      SNSSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Endpoint: "uladzimir_kazak@epam.com",
+          Protocol: "email",
+          TopicArn: { Ref: "createProductTopic" },
+        },
+      },
+      AdditionalSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          FilterPolicy: { price: [{ numeric: [">", 50] }] },
+          FilterPolicyScope: "MessageBody",
+          Endpoint: "mrinex@mail.ru",
+          Protocol: "email",
+          TopicArn: { Ref: "createProductTopic" },
+        },
+      },
     },
   },
   // import the function via paths
@@ -50,6 +97,7 @@ const serverlessConfiguration: AWS = {
     createProduct,
     importProductsFile,
     importFileParser,
+    catalogBatchProcess,
   },
   package: { individually: true },
   custom: {

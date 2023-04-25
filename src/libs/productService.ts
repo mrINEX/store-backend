@@ -229,6 +229,26 @@ class DdbTransactProductService {
     return response;
   }
 
+  async putBatchTransact(items: TransactItems[]) {
+    const inputs = await Promise.all(
+      items.map(async ({ itemStock, itemProduct }) => {
+        const stockParams = this.createStockParams(itemStock);
+        const productParams = await this.createProductParams(itemProduct);
+        return [{ Put: stockParams }, { Put: productParams }];
+      })
+    );
+
+    const input = { TransactItems: inputs.flat() };
+
+    const command = new TransactWriteItemsCommand(input);
+    const response = await this.client.send(command);
+    console.log(
+      `Success - transact for ${this.tableNames.stock} and ${this.tableNames.product}`,
+      response
+    );
+    return response;
+  }
+
   public async getImage(title: string) {
     const defaultImage =
       "https://images.unsplash.com/photo-1546190255-451a91afc548?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max";
@@ -238,7 +258,9 @@ class DdbTransactProductService {
       `https://api.unsplash.com/search/collections/?client_id=${client_id}&query=cats,${title}&per_page=1`
     );
 
-    return res?.data?.results[0]?.cover_photo?.urls?.small ?? defaultImage;
+    const img = res?.data?.results[0]?.cover_photo?.urls?.small ?? "none";
+
+    return img === "none" ? defaultImage : img;
   }
 }
 
