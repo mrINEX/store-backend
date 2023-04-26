@@ -6,11 +6,16 @@ import createProduct from "./src/functions/createProduct";
 import importProductsFile from "./src/functions/importProductsFile";
 import importFileParser from "./src/functions/importFileParser";
 import catalogBatchProcess from "./src/functions/catalogBatchProcess";
+import basicAuthorizer from "./src/functions/basicAuthorizer";
 
 const serverlessConfiguration: AWS = {
   service: "store-backend",
   frameworkVersion: "3",
-  plugins: ["serverless-esbuild", "serverless-auto-swagger"],
+  plugins: [
+    "serverless-esbuild",
+    "serverless-auto-swagger",
+    "serverless-dotenv-plugin",
+  ],
   provider: {
     name: "aws",
     runtime: "nodejs18.x",
@@ -98,6 +103,7 @@ const serverlessConfiguration: AWS = {
     importProductsFile,
     importFileParser,
     catalogBatchProcess,
+    basicAuthorizer,
   },
   package: { individually: true },
   custom: {

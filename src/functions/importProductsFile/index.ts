@@ -16,6 +16,12 @@ export default <AWS["functions"]>{
           },
           502: "Server error",
         },
+        authorizer: {
+          name: "basicAuthorizer",
+          resultTtlInSeconds: 0,
+          type: "request",
+          // arn: "arn:aws:lambda:us-east-1:888972506066:function:store-backend-dev-basicAuthorizer",
+        },
       },
     },
   ],
