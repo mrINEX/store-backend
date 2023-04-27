@@ -3,13 +3,11 @@ import { APIGatewayRequestAuthorizerHandler } from "aws-lambda/trigger/api-gatew
 import { Unauthorized, Forbidden } from "http-errors";
 
 export const basicAuthorizer: APIGatewayRequestAuthorizerHandler = async (
-  event,
-  _context,
-  cb
+  event
 ) => {
   const { Authorization } = event.headers;
   if (!Authorization) {
-    cb(Unauthorized());
+    throw Unauthorized();
   }
 
   const utf8Password = Buffer.from(
@@ -28,7 +26,7 @@ export const basicAuthorizer: APIGatewayRequestAuthorizerHandler = async (
   });
 
   if (!isValid) {
-    cb(Forbidden());
+    throw Forbidden();
   }
 
   return {
