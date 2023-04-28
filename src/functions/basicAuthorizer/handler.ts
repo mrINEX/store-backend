@@ -1,14 +1,10 @@
 import { middyfy } from "../../libs/lambda";
 import { APIGatewayRequestAuthorizerHandler } from "aws-lambda/trigger/api-gateway-authorizer";
-import { Unauthorized, Forbidden } from "http-errors";
 
 export const basicAuthorizer: APIGatewayRequestAuthorizerHandler = async (
   event
 ) => {
   const { Authorization } = event.headers;
-  if (!Authorization) {
-    throw Unauthorized();
-  }
 
   const utf8Password = Buffer.from(
     Authorization.replace("Basic ", ""),
@@ -25,10 +21,6 @@ export const basicAuthorizer: APIGatewayRequestAuthorizerHandler = async (
     isValid,
   });
 
-  if (!isValid) {
-    throw Forbidden();
-  }
-
   return {
     principalId: "user",
     policyDocument: {
@@ -36,7 +28,7 @@ export const basicAuthorizer: APIGatewayRequestAuthorizerHandler = async (
       Statement: [
         {
           Action: "execute-api:Invoke",
-          Effect: "Allow",
+          Effect: isValid ? "Allow" : "Deny",
           Resource: event.methodArn,
         },
       ],

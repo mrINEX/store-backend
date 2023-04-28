@@ -21,6 +21,8 @@ export default <AWS["functions"]>{
           resultTtlInSeconds: 0,
           identitySource: "method.request.header.Authorization",
           type: "request",
+          // enableSimpleResponses: true,
+          // payloadVersion: "2.0",
           // arn: "arn:aws:lambda:us-east-1:888972506066:function:store-backend-dev-basicAuthorizer",
         },
       },
