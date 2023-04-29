@@ -25,6 +25,9 @@ const serverlessConfiguration: AWS = {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
+    httpApi: {
+      cors: true,
+    },
     iam: {
       role: {
         statements: [
@@ -91,6 +94,66 @@ const serverlessConfiguration: AWS = {
           Endpoint: "mrinex@mail.ru",
           Protocol: "email",
           TopicArn: { Ref: "createProductTopic" },
+        },
+      },
+      GatewayResponseAccessDenied: {
+        Type: "AWS::ApiGateway::GatewayResponse",
+        Properties: {
+          ResponseParameters: {
+            "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Headers": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Methods":
+              "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          },
+          ResponseType: "ACCESS_DENIED",
+          RestApiId: {
+            Ref: "ApiGatewayRestApi",
+          },
+        },
+      },
+      GatewayResponseUnauthorized: {
+        Type: "AWS::ApiGateway::GatewayResponse",
+        Properties: {
+          ResponseParameters: {
+            "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Headers": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Methods":
+              "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          },
+          ResponseType: "UNAUTHORIZED",
+          RestApiId: {
+            Ref: "ApiGatewayRestApi",
+          },
+        },
+      },
+      GatewayResponseDefault5XX: {
+        Type: "AWS::ApiGateway::GatewayResponse",
+        Properties: {
+          ResponseParameters: {
+            "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Headers": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Methods":
+              "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          },
+          ResponseType: "DEFAULT_5XX",
+          RestApiId: {
+            Ref: "ApiGatewayRestApi",
+          },
+        },
+      },
+      GatewayResponseDefault4XX: {
+        Type: "AWS::ApiGateway::GatewayResponse",
+        Properties: {
+          ResponseParameters: {
+            "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Headers": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Methods":
+              "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          },
+          ResponseType: "DEFAULT_4XX",
+          RestApiId: {
+            Ref: "ApiGatewayRestApi",
+          },
         },
       },
     },

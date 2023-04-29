@@ -8,7 +8,7 @@ export default <AWS["functions"]>{
       http: {
         method: "get",
         path: "import",
-        cors: { origin: "*" },
+        cors: true,
         responses: {
           200: {
             description: "file",
@@ -20,7 +20,7 @@ export default <AWS["functions"]>{
           name: "basicAuthorizer",
           resultTtlInSeconds: 0,
           identitySource: "method.request.header.Authorization",
-          type: "request",
+          type: "REQUEST",
           // enableSimpleResponses: true,
           // payloadVersion: "2.0",
           // arn: "arn:aws:lambda:us-east-1:888972506066:function:store-backend-dev-basicAuthorizer",
