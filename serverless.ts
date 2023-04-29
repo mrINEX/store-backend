@@ -6,11 +6,16 @@ import createProduct from "./src/functions/createProduct";
 import importProductsFile from "./src/functions/importProductsFile";
 import importFileParser from "./src/functions/importFileParser";
 import catalogBatchProcess from "./src/functions/catalogBatchProcess";
+import basicAuthorizer from "./src/functions/basicAuthorizer";
 
 const serverlessConfiguration: AWS = {
   service: "store-backend",
   frameworkVersion: "3",
-  plugins: ["serverless-esbuild", "serverless-auto-swagger"],
+  plugins: [
+    "serverless-esbuild",
+    "serverless-auto-swagger",
+    "serverless-dotenv-plugin",
+  ],
   provider: {
     name: "aws",
     runtime: "nodejs18.x",
@@ -19,6 +24,9 @@ const serverlessConfiguration: AWS = {
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
+    },
+    httpApi: {
+      cors: true,
     },
     iam: {
       role: {
@@ -88,6 +96,66 @@ const serverlessConfiguration: AWS = {
           TopicArn: { Ref: "createProductTopic" },
         },
       },
+      GatewayResponseAccessDenied: {
+        Type: "AWS::ApiGateway::GatewayResponse",
+        Properties: {
+          ResponseParameters: {
+            "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Headers": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Methods":
+              "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          },
+          ResponseType: "ACCESS_DENIED",
+          RestApiId: {
+            Ref: "ApiGatewayRestApi",
+          },
+        },
+      },
+      GatewayResponseUnauthorized: {
+        Type: "AWS::ApiGateway::GatewayResponse",
+        Properties: {
+          ResponseParameters: {
+            "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Headers": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Methods":
+              "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          },
+          ResponseType: "UNAUTHORIZED",
+          RestApiId: {
+            Ref: "ApiGatewayRestApi",
+          },
+        },
+      },
+      GatewayResponseDefault5XX: {
+        Type: "AWS::ApiGateway::GatewayResponse",
+        Properties: {
+          ResponseParameters: {
+            "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Headers": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Methods":
+              "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          },
+          ResponseType: "DEFAULT_5XX",
+          RestApiId: {
+            Ref: "ApiGatewayRestApi",
+          },
+        },
+      },
+      GatewayResponseDefault4XX: {
+        Type: "AWS::ApiGateway::GatewayResponse",
+        Properties: {
+          ResponseParameters: {
+            "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Headers": "'*'",
+            "gatewayresponse.header.Access-Control-Allow-Methods":
+              "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+          },
+          ResponseType: "DEFAULT_4XX",
+          RestApiId: {
+            Ref: "ApiGatewayRestApi",
+          },
+        },
+      },
     },
   },
   // import the function via paths
@@ -98,6 +166,7 @@ const serverlessConfiguration: AWS = {
     importProductsFile,
     importFileParser,
     catalogBatchProcess,
+    basicAuthorizer,
   },
   package: { individually: true },
   custom: {

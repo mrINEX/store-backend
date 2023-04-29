@@ -3,6 +3,7 @@ node_modules
 jspm_packages
 lib
 .vscode
+.env
 
 # Serverless directories
 .serverless
